@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LUELE PAT &#x2014; Gest&#227;o Patrimonial</title>
+<title>LUELE PAT &mdash; Sociedade Mineira do Luele</title>
 <style>
 :root{
-  --ore:#8B4513;--ore-d:#5C2E0A;--ore-l:#C4783A;
-  --steel:#1C2B3A;--steel-l:#2D3F52;
-  --amber:#F59E0B;--amber-l:#FCD34D;
-  --cream:#F9F5EF;--cream-d:#EDE7DA;
+  --ore:#1A6B2F;--ore-d:#0D4A1E;--ore-l:#2E8B3F;
+  --steel:#0D2B1A;--steel-l:#1A4A2A;
+  --amber:#4CAF50;--amber-l:#81C784;
+  --cream:#F0F7F1;--cream-d:#D4E8D9;
   --green:#16A34A;--red:#DC2626;--blue:#1D4ED8;
   --text:#1A1A1A;--muted:#64748B;
   --r:10px;--sh:0 2px 10px rgba(0,0,0,.1);
@@ -18,7 +18,7 @@
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
 
 /* HEADER */
-header{background:linear-gradient(135deg,var(--ore-d) 0%,var(--ore) 55%,var(--ore-l) 100%);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+header{background:linear-gradient(135deg,#0D4A1E 0%,#1A6B2F 50%,#2E8B3F 100%);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.3)}
 .hinner{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:14px;height:58px}
 .hlogo{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .htitle{font-weight:700;font-size:1.1rem;letter-spacing:.02em}
@@ -31,12 +31,12 @@ header{background:linear-gradient(135deg,var(--ore-d) 0%,var(--ore) 55%,var(--or
 
 /* SIDEBAR NAV */
 .layout{display:flex;max-width:1400px;margin:0 auto;min-height:calc(100vh - 58px)}
-.sidebar{width:210px;flex-shrink:0;background:var(--steel);padding:16px 0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
+.sidebar{width:210px;flex-shrink:0;background:#0D2B1A;padding:16px 0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
 .nav-section{padding:0 12px;margin-bottom:20px}
 .nav-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);padding:0 8px;margin-bottom:6px}
 .nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:8px 12px;background:none;border:none;color:rgba(255,255,255,.65);cursor:pointer;border-radius:8px;font-size:.84rem;text-align:left;transition:all .15s}
 .nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
-.nav-btn.active{background:rgba(245,158,11,.15);color:var(--amber-l);font-weight:600}
+.nav-btn.active{background:rgba(76,175,80,.15);color:#81C784;font-weight:600}
 .nav-btn .nav-ic{font-size:15px;width:20px;text-align:center;flex-shrink:0}
 .nav-badge{margin-left:auto;background:var(--ore);color:#fff;font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:8px}
 
@@ -52,8 +52,8 @@ header{background:linear-gradient(135deg,var(--ore-d) 0%,var(--ore) 55%,var(--or
 .btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:.84rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
 .btn-primary{background:var(--ore);color:#fff}
 .btn-primary:hover{background:var(--ore-d)}
-.btn-secondary{background:var(--steel);color:#fff}
-.btn-secondary:hover{background:var(--steel-l)}
+.btn-secondary{background:#0D2B1A;color:#fff}
+.btn-secondary:hover{background:#1A4A2A}
 .btn-ghost{background:var(--cream-d);color:var(--steel)}
 .btn-ghost:hover{background:#ddd}
 .btn-danger{background:var(--red);color:#fff}
@@ -92,11 +92,11 @@ header{background:linear-gradient(135deg,var(--ore-d) 0%,var(--ore) 55%,var(--or
 
 /* TABLE */
 .table-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
-.table-head-bar{background:var(--steel);padding:11px 14px;display:flex;align-items:center;justify-content:space-between}
+.table-head-bar{background:#0D2B1A;padding:11px 14px;display:flex;align-items:center;justify-content:space-between}
 .table-head-bar span{color:#fff;font-weight:600;font-size:.88rem}
 .table-scroll{overflow-x:auto;max-height:58vh;overflow-y:auto}
 table{width:100%;border-collapse:collapse;font-size:.81rem}
-thead th{background:var(--steel-l);color:rgba(255,255,255,.9);padding:9px 10px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;position:sticky;top:0;z-index:1;cursor:pointer;user-select:none;font-weight:600}
+thead th{background:#1A4A2A;color:rgba(255,255,255,.9);padding:9px 10px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;position:sticky;top:0;z-index:1;cursor:pointer;user-select:none;font-weight:600}
 thead th:hover{background:#3a5068}
 tbody tr{border-bottom:1px solid var(--cream-d);transition:background .1s;cursor:pointer}
 tbody tr:hover{background:#FDF8F3}
@@ -128,7 +128,7 @@ tbody td{padding:8px 10px;vertical-align:middle}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-overlay.open{display:flex}
 .modal{background:#fff;border-radius:16px;width:100%;max-width:720px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.3)}
-.modal-head{background:linear-gradient(135deg,var(--ore-d),var(--ore) 55%,var(--ore-l));color:#fff;padding:18px 22px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.modal-head{background:linear-gradient(135deg,#0D4A1E,#1A6B2F 55%,#2E8B3F);color:#fff;padding:18px 22px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .modal-head h3{font-size:1rem;font-weight:700;line-height:1.3}
 .modal-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:1rem;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .modal-close:hover{background:rgba(255,255,255,.35)}
@@ -180,7 +180,7 @@ tbody td{padding:8px 10px;vertical-align:middle}
 .termo-header h2{font-size:1.1rem;font-weight:700;color:var(--steel)}
 .termo-header p{font-size:.8rem;color:var(--muted)}
 .termo-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.8rem}
-.termo-table th{background:var(--steel);color:#fff;padding:6px 10px;text-align:left}
+.termo-table th{background:#0D2B1A;color:#fff;padding:6px 10px;text-align:left}
 .termo-table td{border:1px solid #ddd;padding:6px 10px}
 .termo-table tr:nth-child(even) td{background:#f9f9f9}
 .termo-sigs{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px}
@@ -204,9 +204,9 @@ tbody td{padding:8px 10px;vertical-align:middle}
 
 <header>
   <div class="hinner">
-    <div class="hlogo">&#9935;</div>
+    <div class="hlogo" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);font-size:11px;font-weight:900;letter-spacing:.05em;color:#fff;width:44px;height:44px">SML</div>
     <div>
-      <div class="htitle">LUELE PAT</div>
+      <div class="htitle" style="font-size:1.15rem;letter-spacing:.05em">LUELE PAT</div>
       <div class="hsubt">Sociedade Mineira do Luele &middot; Gest&#227;o Patrimonial</div>
     </div>
     <div class="hmeta" id="hdate"></div>
@@ -586,7 +586,7 @@ tbody td{padding:8px 10px;vertical-align:middle}
         <button class="btn btn-primary btn-sm" onclick="calcDepreciacoes()">&#128201; Calcular Todas</button>
       </div>
       <div id="dep-alert"></div>
-      <div class="grid-3" style="margin-bottom:14px" id="dep-kpis"></div>
+      <div id="dep-kpis" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:14px"></div>
       <div class="table-wrap">
         <div class="table-head-bar"><span>Ativos com Deprecia&#231;&#227;o Calculada</span></div>
         <div class="table-scroll">
@@ -653,7 +653,7 @@ tbody td{padding:8px 10px;vertical-align:middle}
           <button class="btn btn-primary" style="margin-top:10px" onclick="exportTransCSV()">&#128229; Exportar Transfer&#234;ncias</button>
         </div>
       </div>
-      <div id="rel-output" class="card" style="display:none;margin-top:0">
+      <div id="rel-output" class="card" style="display:none;margin-top:14px"><div class="card-title" id="rel-output-title">Resultados</div>
         <div class="table-scroll">
           <table id="rel-table"><thead></thead><tbody></tbody></table>
         </div>
@@ -810,8 +810,7 @@ async function loadAllData() {
     loadTransferencias();
     loadDepreciacoes();
     populateRelDept();
-    populateRelDeptUsers();
-  } catch(e) {
+    } catch(e) {
     console.error('Erro ao carregar dados:', e);
   }
 }
@@ -864,6 +863,9 @@ window.showPage = function(pg) {
   document.getElementById('nav-' + pg)?.classList.add('active');
   if (pg === 'ativos') { FILTERED_ATIVOS = [...ALL_ATIVOS]; renderAtivos(); }
   if (pg === 'cadastro' && !EDIT_MODE) resetCadForm();
+  if (pg === 'utilizadores') loadUsers();
+  if (pg === 'depreciacoes') calcDepreciacoes();
+  if (pg === 'transferencias') loadTransferencias();
 };
 
 // ── DASHBOARD ──────────────────────────────────────────────────────────────
@@ -924,7 +926,7 @@ window.loadDashboard = function() {
 
   document.getElementById('charts-row').innerHTML = `
     <div class="card"><div class="card-title">Classes Equip. Pesado</div>${ct.map(([l,v])=>`<div class="bar-row"><div class="bar-lbl" title="${l}">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/mc*100)}%;background:var(--ore)"></div></div><div class="bar-num">${v}</div></div>`).join('')}</div>
-    <div class="card"><div class="card-title">Top Marcas</div>${mt.map(([l,v])=>`<div class="bar-row"><div class="bar-lbl">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/mm*100)}%;background:var(--steel)"></div></div><div class="bar-num">${v}</div></div>`).join('')}</div>
+    <div class="card"><div class="card-title">Top Marcas</div>${mt.map(([l,v])=>`<div class="bar-row"><div class="bar-lbl">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/mm*100)}%;background:#0D2B1A"></div></div><div class="bar-num">${v}</div></div>`).join('')}</div>
     <div class="card"><div class="card-title">Estado dos Ativos</div><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><svg width="150" height="150" viewBox="0 0 150 150">${svg}</svg><div>${leg}</div></div></div>
   `;
 
@@ -1202,7 +1204,7 @@ window.selectAtivoTrans = function(id) {
   document.getElementById('tr-origem').value = a.localizacao||'';
   document.getElementById('tr-colab-orig').value = a.colaborador||'';
   const dEl = document.getElementById('tr-data');
-  if(!dEl.value) dEl.value = new Date().toISOString().substring(0,10);
+  dEl.value = new Date().toISOString().substring(0,10);
 };
 
 window.saveTransferencia = async function() {
@@ -1252,6 +1254,10 @@ window.novaTransModal = function() {
   selectAtivoTrans(CURRENT_ATIVO.id);
 };
 
+window.openTransModal = function() {
+  showPage('transferencias');
+};
+
 async function loadTransferencias() {
   const el = document.getElementById('trans-list');
   if (!el) return;
@@ -1272,10 +1278,21 @@ window.searchColaborador = function() {
   if (!q || q.length < 2) { document.getElementById('termo-colab-list').innerHTML=''; return; }
   const colabs = [...new Set(ALL_ATIVOS.map(a=>a.colaborador).filter(Boolean))];
   const res = colabs.filter(c=>c.toLowerCase().includes(q)).slice(0,6);
-  document.getElementById('termo-colab-list').innerHTML = res.map(c=>`<div onclick="selectColabTermo('${c.replace(/'/g,"\\'")}' )" style="padding:7px 10px;border:1px solid var(--cream-d);border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.83rem">${c}</div>`).join('');
+  document.getElementById('termo-colab-list').innerHTML = res.map((c,i)=>{
+    const safe = c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+    return `<div onclick="selectColabTermoIdx(${i})" data-name="${safe}" style="padding:7px 10px;border:1px solid var(--cream-d);border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.83rem">${safe}</div>`;
+  }).join('');
+  window._termoResults = res;
 };
 
-window.selectColabTermo = function(nome) {
+window.selectColabTermoIdx = function(idx) {
+  const nome = window._termoResults && window._termoResults[idx];
+  if(nome) selectColabTermoFn(nome);
+};
+
+window.selectColabTermo = function(nome) { selectColabTermoFn(nome); };
+
+function selectColabTermoFn(nome) {
   TERMO_COLAB = nome;
   document.getElementById('termo-search').value = nome;
   document.getElementById('termo-colab-list').innerHTML='';
@@ -1319,7 +1336,7 @@ window.printTermo = function() {
 // ── DEPRECIACOES ───────────────────────────────────────────────────────────
 window.calcDepreciacoes = async function() {
   const el = document.getElementById('tbody-dep');
-  const depAtivos = ALL_ATIVOS.filter(a=>(a.custoAOA||a.custoUSD||a.custoEUR)&&a.vidaUtil&&a.dataIncorporacao);
+  const depAtivos = ALL_ATIVOS.filter(a=>(a.custoAOA||a.custoUSD||a.custoEUR)&&a.dataIncorporacao);
   if(!depAtivos.length){ el.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">Sem ativos com dados de deprecia&ccedil;&atilde;o completos.</td></tr>'; return; }
   const now = new Date();
   let totalCusto=0, totalDepr=0, totalVC=0;
@@ -1329,7 +1346,9 @@ window.calcDepreciacoes = async function() {
     const dtStr = String(a.dataIncorporacao||'');
     const dt = dtStr.includes('T') ? new Date(dtStr) : dtStr.length>=10 ? new Date(dtStr.substring(0,10)) : null;
     const anos = dt ? Math.max(0,(now-dt)/(1000*60*60*24*365.25)) : 0;
-    const vu = a.vidaUtil||10;
+    // Vida util por classe
+    const vuMap={'Trator Esteira':15,'Escavadeira Hidráulica':12,'Pá Carregadeira':12,'Motoniveladora':12,'Rolo Compactador':10,'Caminhão Articulado':10,'Caminhão Rigido':10,'Torre de Iluminação':8,'Gerador':10,'Motor Estacionário':8,'Empilhadeira':8,'Veiculo Utilitario':8,'Bem Informático/Administrativo':5};
+    const vu = a.vidaUtil || vuMap[a.classe] || (a.tipo==='Equipamento Pesado'?10:5);
     const deprAcum = Math.min(custo, custo/vu*anos);
     const vc = Math.max(0, custo-deprAcum);
     totalCusto+=custo; totalDepr+=deprAcum; totalVC+=vc;
@@ -1394,9 +1413,10 @@ window.gerarRelEstado = function() {
 function renderRelTable(data, title) {
   const el = document.getElementById('rel-output');
   el.style.display='block';
-  el.querySelector('.card-title')?.remove();
+  const titleEl = document.getElementById('rel-output-title');
+  if(titleEl) titleEl.textContent = title + ' — ' + data.length + ' ativos';
   const tbl = document.getElementById('rel-table');
-  tbl.innerHTML = `<caption style="text-align:left;font-weight:700;margin-bottom:8px;caption-side:top">${title} — ${data.length} ativos</caption>
+  tbl.innerHTML = `
     <thead><tr><th>Código</th><th>Descrição</th><th>Marca</th><th>Localização</th><th>Estado</th><th>Tipo</th></tr></thead>
     <tbody>${data.map(a=>`<tr><td class="td-mono">${a.codigo||'—'}</td><td class="td-desc">${a.descricao||'—'}</td><td>${a.marca||'—'}</td><td class="td-loc">${a.localizacao||'—'}</td><td>${estadoBadge(a.estado)}</td><td>${a.tipo==='Equipamento Pesado'?'Pesado':'Bem'}</td></tr>`).join('')}</tbody>`;
 }
