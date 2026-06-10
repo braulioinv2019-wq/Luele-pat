@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUELE PAT &#x2014; Gest&#227;o Patrimonial</title>
+<style>
+:root{
+  --ore:#8B4513;--ore-d:#5C2E0A;--ore-l:#C4783A;
+  --steel:#1C2B3A;--steel-l:#2D3F52;
+  --amber:#F59E0B;--amber-l:#FCD34D;
+  --cream:#F9F5EF;--cream-d:#EDE7DA;
+  --green:#16A34A;--red:#DC2626;--blue:#1D4ED8;
+  --text:#1A1A1A;--muted:#64748B;
+  --r:10px;--sh:0 2px 10px rgba(0,0,0,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--ore-d) 0%,var(--ore) 55%,var(--ore-l) 100%);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.hinner{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:14px;height:58px}
+.hlogo{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.htitle{font-weight:700;font-size:1.1rem;letter-spacing:.02em}
+.hsubt{font-size:.72rem;opacity:.75;margin-top:1px}
+.hmeta{margin-left:auto;font-size:.7rem;opacity:.65;text-align:right}
+.huser{display:flex;align-items:center;gap:8px;margin-left:16px}
+.huser-name{font-size:.8rem;opacity:.9}
+.hbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.78rem;transition:background .2s}
+.hbtn:hover{background:rgba(255,255,255,.25)}
+
+/* SIDEBAR NAV */
+.layout{display:flex;max-width:1400px;margin:0 auto;min-height:calc(100vh - 58px)}
+.sidebar{width:210px;flex-shrink:0;background:var(--steel);padding:16px 0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
+.nav-section{padding:0 12px;margin-bottom:20px}
+.nav-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);padding:0 8px;margin-bottom:6px}
+.nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:8px 12px;background:none;border:none;color:rgba(255,255,255,.65);cursor:pointer;border-radius:8px;font-size:.84rem;text-align:left;transition:all .15s}
+.nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-btn.active{background:rgba(245,158,11,.15);color:var(--amber-l);font-weight:600}
+.nav-btn .nav-ic{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--ore);color:#fff;font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:8px}
+
+/* MAIN */
+.main{flex:1;padding:20px;overflow-x:hidden}
+.page{display:none}
+.page.active{display:block}
+
+/* PAGE HEADER */
+.page-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.page-hd h2{font-size:1.15rem;font-weight:700;color:var(--steel)}
+.page-hd p{font-size:.8rem;color:var(--muted);margin-top:2px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:.84rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
+.btn-primary{background:var(--ore);color:#fff}
+.btn-primary:hover{background:var(--ore-d)}
+.btn-secondary{background:var(--steel);color:#fff}
+.btn-secondary:hover{background:var(--steel-l)}
+.btn-ghost{background:var(--cream-d);color:var(--steel)}
+.btn-ghost:hover{background:#ddd}
+.btn-danger{background:var(--red);color:#fff}
+.btn-success{background:var(--green);color:#fff}
+.btn-sm{padding:5px 10px;font-size:.76rem}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:#fff;border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);border-left:4px solid var(--ore);transition:transform .15s}
+.kpi:hover{transform:translateY(-1px)}
+.kpi.g{border-left-color:var(--green)}.kpi.b{border-left-color:var(--blue)}.kpi.a{border-left-color:var(--amber)}.kpi.r{border-left-color:var(--red)}.kpi.v{border-left-color:#7C3AED}
+.kpi-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}
+.kpi-val{font-size:1.8rem;font-weight:700;color:var(--steel);line-height:1}
+.kpi-sub{font-size:.7rem;color:var(--muted);margin-top:3px}
+
+/* CARDS */
+.card{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh);margin-bottom:14px}
+.card-title{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--cream-d)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+/* CHARTS */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:.79rem}
+.bar-lbl{width:155px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.bar-track{flex:1;background:var(--cream-d);border-radius:3px;height:11px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.bar-num{width:28px;text-align:right;color:var(--muted);flex-shrink:0;font-size:.73rem}
+
+/* FILTER BAR */
+.filter-bar{background:#fff;border-radius:var(--r);padding:12px 14px;box-shadow:var(--sh);margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-bar input,.filter-bar select{border:1px solid var(--cream-d);border-radius:7px;padding:7px 10px;font-size:.83rem;background:var(--cream);color:var(--text);outline:none;transition:border-color .2s}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--ore)}
+.filter-bar input{flex:1;min-width:200px}
+.filter-bar select{min-width:150px}
+.count-badge{background:var(--ore);color:#fff;padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:700;white-space:nowrap}
+
+/* TABLE */
+.table-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.table-head-bar{background:var(--steel);padding:11px 14px;display:flex;align-items:center;justify-content:space-between}
+.table-head-bar span{color:#fff;font-weight:600;font-size:.88rem}
+.table-scroll{overflow-x:auto;max-height:58vh;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:.81rem}
+thead th{background:var(--steel-l);color:rgba(255,255,255,.9);padding:9px 10px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;position:sticky;top:0;z-index:1;cursor:pointer;user-select:none;font-weight:600}
+thead th:hover{background:#3a5068}
+tbody tr{border-bottom:1px solid var(--cream-d);transition:background .1s;cursor:pointer}
+tbody tr:hover{background:#FDF8F3}
+tbody td{padding:8px 10px;vertical-align:middle}
+.td-mono{font-family:monospace;font-size:.76rem;color:var(--muted)}
+.td-desc{max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.td-loc{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:.78rem}
+
+/* STATUS BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700;white-space:nowrap}
+.badge-ativo{background:#DCFCE7;color:#166534}
+.badge-bom{background:#DCFCE7;color:#166534}
+.badge-desm{background:#FEE2E2;color:#991B1B}
+.badge-av{background:#FEE2E2;color:#991B1B}
+.badge-res{background:#FEF9C3;color:#854D0E}
+.badge-nd{background:#F1F5F9;color:#475569}
+.tipo-eq{background:#EFF6FF;color:#1D4ED8;font-size:.68rem;padding:2px 6px;border-radius:8px;font-weight:600}
+.tipo-adm{background:#F0FDF4;color:#166534;font-size:.68rem;padding:2px 6px;border-radius:8px;font-weight:600}
+
+/* PAGINATION */
+.pag{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--cream-d);font-size:.8rem;color:var(--muted)}
+.pag-btns{display:flex;gap:4px}
+.pag-btn{padding:3px 9px;border:1px solid var(--cream-d);border-radius:4px;background:#fff;cursor:pointer;font-size:.77rem;transition:all .15s}
+.pag-btn:hover:not(:disabled){background:var(--ore);color:#fff;border-color:var(--ore)}
+.pag-btn:disabled{opacity:.35;cursor:default}
+.pag-btn.cur{background:var(--ore);color:#fff;border-color:var(--ore)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:720px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.modal-head{background:linear-gradient(135deg,var(--ore-d),var(--ore) 55%,var(--ore-l));color:#fff;padding:18px 22px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.modal-head h3{font-size:1rem;font-weight:700;line-height:1.3}
+.modal-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:1rem;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:rgba(255,255,255,.35)}
+.modal-body{padding:22px}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--cream-d);display:flex;gap:10px;justify-content:flex-end}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail-field{padding:10px 12px;background:var(--cream);border-radius:7px;border-left:3px solid var(--ore-l)}
+.detail-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
+.detail-val{font-size:.88rem;font-weight:500;color:var(--steel);word-break:break-word}
+.detail-val.mono{font-family:monospace;font-size:.82rem}
+.detail-sec{grid-column:1/-1;font-size:.72rem;font-weight:700;text-transform:uppercase;color:var(--ore);margin-top:6px;padding-top:6px;border-top:1px solid var(--cream-d)}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:.78rem;font-weight:600;color:var(--steel)}
+.form-group input,.form-group select,.form-group textarea{border:1px solid var(--cream-d);border-radius:7px;padding:8px 11px;font-size:.85rem;background:#fff;color:var(--text);outline:none;transition:border-color .2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--ore)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-section{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ore);grid-column:1/-1;margin-top:8px;padding-top:8px;border-top:1px solid var(--cream-d)}
+
+/* ALERTS */
+.alert{padding:10px 14px;border-radius:8px;font-size:.83rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.alert-success{background:#DCFCE7;color:#166534;border:1px solid #86EFAC}
+.alert-error{background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5}
+.alert-info{background:#EFF6FF;color:#1D4ED8;border:1px solid #93C5FD}
+.alert-warning{background:#FEF9C3;color:#854D0E;border:1px solid #FDE047}
+
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--muted);gap:10px;flex-direction:column}
+.spinner{width:32px;height:32px;border:3px solid var(--cream-d);border-top-color:var(--ore);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty-icon{font-size:2.5rem;margin-bottom:10px}
+.empty p{font-size:.9rem}
+
+/* TRANSFER LOG */
+.trans-row{border-left:3px solid var(--ore-l);padding:10px 14px;margin-bottom:8px;background:var(--cream);border-radius:0 7px 7px 0}
+.trans-row .tr-desc{font-weight:500;font-size:.85rem}
+.trans-row .tr-meta{font-size:.76rem;color:var(--muted);margin-top:3px}
+.trans-row .tr-arrow{color:var(--ore);font-weight:700}
+
+/* TERMO */
+.termo-preview{border:1px solid var(--cream-d);border-radius:8px;padding:24px;background:#fff;font-size:.85rem;line-height:1.7}
+.termo-header{text-align:center;margin-bottom:20px}
+.termo-header h2{font-size:1.1rem;font-weight:700;color:var(--steel)}
+.termo-header p{font-size:.8rem;color:var(--muted)}
+.termo-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.8rem}
+.termo-table th{background:var(--steel);color:#fff;padding:6px 10px;text-align:left}
+.termo-table td{border:1px solid #ddd;padding:6px 10px}
+.termo-table tr:nth-child(even) td{background:#f9f9f9}
+.termo-sigs{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px}
+.sig-block{border-top:1px solid #333;padding-top:6px;text-align:center;font-size:.78rem}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{width:180px}
+  .grid-2,.grid-3,.form-grid,.detail-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:1}
+}
+@media(max-width:700px){
+  .sidebar{display:none}
+  .layout{display:block}
+  .main{padding:12px}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hinner">
+    <div class="hlogo">&#9935;</div>
+    <div>
+      <div class="htitle">LUELE PAT</div>
+      <div class="hsubt">Sociedade Mineira do Luele &middot; Gest&#227;o Patrimonial</div>
+    </div>
+    <div class="hmeta" id="hdate"></div>
+    <div class="huser">
+      <span class="huser-name" id="huser-name">Carregando...</span>
+      <button class="hbtn" onclick="logout()">Sair</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Principal</div>
+      <button class="nav-btn active" onclick="showPage('dashboard')" id="nav-dashboard">
+        <span class="nav-ic">&#128202;</span> Dashboard
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Gest&#227;o</div>
+      <button class="nav-btn" onclick="showPage('ativos')" id="nav-ativos">
+        <span class="nav-ic">&#128451;</span> Ativos
+        <span class="nav-badge" id="nb-ativos">...</span>
+      </button>
+      <button class="nav-btn" onclick="showPage('cadastro')" id="nav-cadastro">
+        <span class="nav-ic">&#10133;</span> Novo Ativo
+      </button>
+      <button class="nav-btn" onclick="showPage('transferencias')" id="nav-transferencias">
+        <span class="nav-ic">&#128260;</span> Transfer&#234;ncias
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Documentos</div>
+      <button class="nav-btn" onclick="showPage('termos')" id="nav-termos">
+        <span class="nav-ic">&#128196;</span> Termos de Resp.
+      </button>
+      <button class="nav-btn" onclick="showPage('depreciacoes')" id="nav-depreciacoes">
+        <span class="nav-ic">&#128201;</span> Deprecia&#231;&#245;es
+      </button>
+      <button class="nav-btn" onclick="showPage('relatorios')" id="nav-relatorios">
+        <span class="nav-ic">&#128203;</span> Relat&#243;rios
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Sistema</div>
+      <button class="nav-btn" onclick="showPage('utilizadores')" id="nav-utilizadores">
+        <span class="nav-ic">&#128100;</span> Utilizadores
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- ═══ LOGIN ═══ -->
+    <div id="login-screen" style="display:flex;align-items:center;justify-content:center;min-height:80vh">
+      <div style="background:#fff;border-radius:16px;padding:40px;max-width:400px;width:100%;box-shadow:0 4px 24px rgba(0,0,0,.1);text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:10px">&#9935;</div>
+        <h2 style="font-size:1.3rem;font-weight:700;color:var(--steel);margin-bottom:4px">LUELE PAT</h2>
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:24px">Gest&#227;o Patrimonial &middot; Sociedade Mineira do Luele</p>
+        <div id="login-form">
+          <div class="form-group" style="margin-bottom:12px;text-align:left">
+            <label>Email</label>
+            <input type="email" id="login-email" placeholder="utilizador@sml.ao">
+          </div>
+          <div class="form-group" style="margin-bottom:20px;text-align:left">
+            <label>Senha</label>
+            <input type="password" id="login-pass" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" onkeydown="if(event.key==='Enter')doLogin()">
+          </div>
+          <div id="login-error" class="alert alert-error" style="display:none"></div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:11px" onclick="doLogin()">
+            Entrar no Sistema
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-hd">
+        <div>
+          <h2>&#128202; Dashboard</h2>
+          <p>Vis&#227;o geral do patrim&#243;nio da Sociedade Mineira do Luele</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="loadDashboard()">&#8635; Actualizar</button>
+      </div>
+      <div id="dash-loading" class="loading"><div class="spinner"></div><span>A carregar dados...</span></div>
+      <div id="dash-content" style="display:none">
+        <div class="kpi-grid" id="kpi-grid"></div>
+        <div class="grid-3" id="charts-row"></div>
+        <div id="chart-locs" class="card" style="margin-top:14px"></div>
+        <div class="grid-2" style="margin-top:14px">
+          <div class="card" id="chart-anos"></div>
+          <div class="card" id="recent-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ATIVOS ═══ -->
+    <div class="page" id="page-ativos">
+      <div class="page-hd">
+        <div><h2>&#128451; Invent&#225;rio de Ativos</h2><p>Todos os bens patrimoniais registados</p></div>
+        <button class="btn btn-primary btn-sm" onclick="showPage('cadastro')">&#10133; Novo Ativo</button>
+      </div>
+      <div class="filter-bar">
+        <input type="text" id="s-ativos" placeholder="&#128269; Pesquisar descri&#231;&#227;o, marca, s&#233;rie, c&#243;digo..." oninput="filterAtivos()">
+        <select id="f-tipo" onchange="filterAtivos()">
+          <option value="">Todos os Tipos</option>
+          <option value="Equipamento Pesado">Equipamentos Pesados</option>
+          <option value="Bem Inform&#225;tico/Administrativo">Bens Inf./Adm.</option>
+        </select>
+        <select id="f-estado" onchange="filterAtivos()">
+          <option value="">Todos os Estados</option>
+          <option>Ativo</option><option>Bom</option><option>Desmobilizado</option><option>Avariado</option>
+        </select>
+        <select id="f-marca" onchange="filterAtivos()"><option value="">Todas as Marcas</option></select>
+        <button class="btn btn-ghost btn-sm" onclick="clearFiltersAtivos()">Limpar</button>
+        <span class="count-badge" id="cnt-ativos">0</span>
+      </div>
+      <div class="table-wrap">
+        <div class="table-head-bar">
+          <span>Invent&#225;rio Geral de Ativos</span>
+          <span style="font-size:.75rem;opacity:.6">Clique numa linha para ver detalhes</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th onclick="sortAtivos(0)">#</th>
+              <th onclick="sortAtivos(1)">C&#243;digo</th>
+              <th onclick="sortAtivos(2)">Descri&#231;&#227;o</th>
+              <th onclick="sortAtivos(3)">Marca</th>
+              <th onclick="sortAtivos(4)">Data Incorp.</th>
+              <th onclick="sortAtivos(5)">Localiza&#231;&#227;o</th>
+              <th onclick="sortAtivos(6)">Estado</th>
+              <th>Tipo</th>
+              <th>A&#231;&#245;es</th>
+            </tr></thead>
+            <tbody id="tbody-ativos"></tbody>
+          </table>
+        </div>
+        <div class="pag" id="pag-ativos"></div>
+      </div>
+    </div>
+
+    <!-- ═══ CADASTRO ═══ -->
+    <div class="page" id="page-cadastro">
+      <div class="page-hd">
+        <div><h2 id="cad-title">&#10133; Novo Ativo</h2><p>Preenche os dados do bem patrimonial</p></div>
+        <button class="btn btn-ghost btn-sm" onclick="showPage('ativos')">&#8592; Voltar</button>
+      </div>
+      <div id="cad-alert"></div>
+      <div class="card">
+        <form id="cad-form" onsubmit="saveAtivo(event)">
+          <div class="form-grid">
+            <div class="form-section">Identifica&#231;&#227;o</div>
+            <div class="form-group">
+              <label>C&#243;digo Patrimonial *</label>
+              <input type="text" id="f-codigo" required placeholder="Ex: 99.01.10.001">
+            </div>
+            <div class="form-group">
+              <label>C&#243;d. Equipamento</label>
+              <input type="text" id="f-equip-cod" placeholder="Ex: EQ0990110001">
+            </div>
+            <div class="form-group">
+              <label>TAG</label>
+              <input type="text" id="f-tag" placeholder="Ex: L01">
+            </div>
+            <div class="form-group">
+              <label>N&#186; S&#233;rie / Chassi</label>
+              <input type="text" id="f-serie" placeholder="N&#186; de s&#233;rie do fabricante">
+            </div>
+            <div class="form-group">
+              <label>Matr&#237;cula / Placa</label>
+              <input type="text" id="f-matricula" placeholder="Ex: LD-19-62-AA">
+            </div>
+
+            <div class="form-section">Informa&#231;&#227;o do Ativo</div>
+            <div class="form-group full">
+              <label>Descri&#231;&#227;o *</label>
+              <input type="text" id="f-descricao" required placeholder="Descri&#231;&#227;o completa do bem">
+            </div>
+            <div class="form-group">
+              <label>Marca</label>
+              <input type="text" id="f-marca" placeholder="Ex: CATERPILLAR">
+            </div>
+            <div class="form-group">
+              <label>Modelo</label>
+              <input type="text" id="f-modelo" placeholder="Ex: D10T2">
+            </div>
+            <div class="form-group">
+              <label>Classe / Tipo</label>
+              <input type="text" id="f-classe" placeholder="Ex: Trator Esteira">
+            </div>
+            <div class="form-group">
+              <label>Tipo de Bem *</label>
+              <select id="f-tipo-bem" required>
+                <option value="">Seleccionar...</option>
+                <option value="Equipamento Pesado">Equipamento Pesado</option>
+                <option value="Bem Inform&#225;tico/Administrativo">Bem Inform&#225;tico/Administrativo</option>
+                <option value="Ve&#237;culo">Ve&#237;culo</option>
+                <option value="M&#243;vel/Equipamento de Escrit&#243;rio">M&#243;vel/Equipamento de Escrit&#243;rio</option>
+                <option value="Infra-estrutura">Infra-estrutura</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Data de Incorpora&#231;&#227;o</label>
+              <input type="date" id="f-data">
+            </div>
+            <div class="form-group">
+              <label>Estado Actual *</label>
+              <select id="f-estado-cad" required>
+                <option value="">Seleccionar...</option>
+                <option value="Ativo">Ativo</option>
+                <option value="Bom">Bom</option>
+                <option value="Avariado">Avariado</option>
+                <option value="Em Manuten&#231;&#227;o">Em Manuten&#231;&#227;o</option>
+                <option value="Desmobilizado">Desmobilizado</option>
+                <option value="Abatido">Abatido</option>
+              </select>
+            </div>
+
+            <div class="form-section">Localiza&#231;&#227;o e Responsabilidade</div>
+            <div class="form-group full">
+              <label>Localiza&#231;&#227;o</label>
+              <input type="text" id="f-localizacao" placeholder="Ex: Sector de Opera&#231;&#245;es Mineiras">
+            </div>
+            <div class="form-group">
+              <label>&#193;rea / Departamento</label>
+              <input type="text" id="f-area" placeholder="Ex: Departamento de Minera&#231;&#227;o">
+            </div>
+            <div class="form-group">
+              <label>Colaborador Respons&#225;vel</label>
+              <input type="text" id="f-colaborador" placeholder="Nome do respons&#225;vel">
+            </div>
+            <div class="form-group">
+              <label>Categoria / Cargo</label>
+              <input type="text" id="f-categoria" placeholder="Cargo do colaborador">
+            </div>
+
+            <div class="form-section">Aquisi&#231;&#227;o e Custo</div>
+            <div class="form-group">
+              <label>Fornecedor</label>
+              <input type="text" id="f-fornecedor" placeholder="Nome do fornecedor">
+            </div>
+            <div class="form-group">
+              <label>N&#186; Factura / PCO</label>
+              <input type="text" id="f-factura" placeholder="N&#186; do documento de compra">
+            </div>
+            <div class="form-group">
+              <label>Custo (valor)</label>
+              <input type="number" id="f-custo" placeholder="0.00" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+              <label>Moeda</label>
+              <select id="f-moeda">
+                <option value="AOA">AOA (Kwanza)</option>
+                <option value="USD">USD (D&#243;lar)</option>
+                <option value="EUR">EUR (Euro)</option>
+                <option value="ZAR">ZAR (Rand)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Vida &#218;til (anos)</label>
+              <input type="number" id="f-vida-util" placeholder="Ex: 10" min="1" max="100">
+            </div>
+
+            <div class="form-section">Observa&#231;&#245;es</div>
+            <div class="form-group full">
+              <label>Observa&#231;&#245;es</label>
+              <textarea id="f-obs" placeholder="Notas adicionais sobre o bem..."></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">
+            <button type="button" class="btn btn-ghost" onclick="showPage('ativos')">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="cad-submit-btn">&#128190; Guardar Ativo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ═══ TRANSFERENCIAS ═══ -->
+    <div class="page" id="page-transferencias">
+      <div class="page-hd">
+        <div><h2>&#128260; Transfer&#234;ncias</h2><p>Movimenta&#231;&#227;o de ativos entre sectores e colaboradores</p></div>
+        <button class="btn btn-primary btn-sm" onclick="openTransModal()">&#10133; Nova Transfer&#234;ncia</button>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Registo de Nova Transfer&#234;ncia</div>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Ativo a Transferir *</label>
+              <input type="text" id="tr-search" placeholder="Pesquisar ativo por c&#243;digo ou descri&#231;&#227;o..." oninput="searchAtivoTrans()">
+              <div id="tr-results" style="margin-top:4px"></div>
+            </div>
+            <div id="tr-ativo-sel" style="display:none;grid-column:1/-1;background:var(--cream);border-radius:7px;padding:10px;border-left:3px solid var(--ore)">
+              <div class="detail-lbl">Ativo Seleccionado</div>
+              <div id="tr-ativo-info" style="font-weight:600;font-size:.9rem"></div>
+            </div>
+            <div class="form-group">
+              <label>De (Origem)</label>
+              <input type="text" id="tr-origem" placeholder="Localiza&#231;&#227;o actual">
+            </div>
+            <div class="form-group">
+              <label>Para (Destino) *</label>
+              <input type="text" id="tr-destino" required placeholder="Nova localiza&#231;&#227;o">
+            </div>
+            <div class="form-group">
+              <label>De Colaborador</label>
+              <input type="text" id="tr-colab-orig" placeholder="Colaborador actual">
+            </div>
+            <div class="form-group">
+              <label>Para Colaborador *</label>
+              <input type="text" id="tr-colab-dest" placeholder="Novo respons&#225;vel">
+            </div>
+            <div class="form-group">
+              <label>Data da Transfer&#234;ncia *</label>
+              <input type="date" id="tr-data">
+            </div>
+            <div class="form-group">
+              <label>Motivo</label>
+              <input type="text" id="tr-motivo" placeholder="Motivo da transfer&#234;ncia">
+            </div>
+            <div class="form-group full">
+              <label>Observa&#231;&#245;es</label>
+              <textarea id="tr-obs" placeholder="Notas adicionais..." style="min-height:60px"></textarea>
+            </div>
+          </div>
+          <div id="tr-alert" style="margin-top:10px"></div>
+          <div style="margin-top:14px;display:flex;justify-content:flex-end">
+            <button class="btn btn-primary" onclick="saveTransferencia()">&#128260; Registar Transfer&#234;ncia</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">&#218;ltimas Transfer&#234;ncias</div>
+          <div id="trans-list"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TERMOS ═══ -->
+    <div class="page" id="page-termos">
+      <div class="page-hd">
+        <div><h2>&#128196; Termos de Responsabilidade</h2><p>Gera&#231;&#227;o de termos por colaborador</p></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Seleccionar Colaborador</div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label>Colaborador</label>
+            <input type="text" id="termo-search" placeholder="Nome do colaborador..." oninput="searchColaborador()">
+          </div>
+          <div id="termo-colab-list"></div>
+          <div id="termo-colab-sel" style="display:none;margin-top:12px;padding:10px;background:var(--cream);border-radius:7px;border-left:3px solid var(--ore)">
+            <div class="detail-lbl">Colaborador Seleccionado</div>
+            <div id="termo-colab-info" style="font-weight:600"></div>
+            <div id="termo-ativos-count" style="font-size:.78rem;color:var(--muted);margin-top:2px"></div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:8px">
+            <button class="btn btn-primary" onclick="previewTermo()">&#128065; Pr&#233;-visualizar</button>
+            <button class="btn btn-secondary" onclick="printTermo()">&#128438; Imprimir / PDF</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Pr&#233;-visualiza&#231;&#227;o do Termo</div>
+          <div id="termo-preview"><div class="empty"><div class="empty-icon">&#128196;</div><p>Selecciona um colaborador para gerar o termo.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ DEPRECIACOES ═══ -->
+    <div class="page" id="page-depreciacoes">
+      <div class="page-hd">
+        <div><h2>&#128201; Deprecia&#231;&#245;es</h2><p>C&#225;lculo do valor actual dos ativos</p></div>
+        <button class="btn btn-primary btn-sm" onclick="calcDepreciacoes()">&#128201; Calcular Todas</button>
+      </div>
+      <div id="dep-alert"></div>
+      <div class="grid-3" style="margin-bottom:14px" id="dep-kpis"></div>
+      <div class="table-wrap">
+        <div class="table-head-bar"><span>Ativos com Deprecia&#231;&#227;o Calculada</span></div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th>C&#243;digo</th>
+              <th>Descri&#231;&#227;o</th>
+              <th>Data Incorp.</th>
+              <th>Vida &#218;til</th>
+              <th>Custo Original</th>
+              <th>Anos Decorridos</th>
+              <th>Depr. Acumulada</th>
+              <th>Valor Actual</th>
+              <th>Estado</th>
+            </tr></thead>
+            <tbody id="tbody-dep"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RELATORIOS ═══ -->
+    <div class="page" id="page-relatorios">
+      <div class="page-hd">
+        <div><h2>&#128203; Relat&#243;rios</h2><p>Exporta&#231;&#227;o e an&#225;lise do patrim&#243;nio</p></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Exportar Invent&#225;rio Completo</div>
+          <p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">Exporta todos os ativos em formato CSV para Excel.</p>
+          <button class="btn btn-success" onclick="exportCSV()">&#128229; Exportar CSV (Excel)</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Relat&#243;rio por Departamento</div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label>Seleccionar Departamento</label>
+            <select id="rel-dept"><option value="">Todos os Departamentos</option></select>
+          </div>
+          <button class="btn btn-primary" onclick="gerarRelDept()">&#128203; Gerar Relat&#243;rio</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Relat&#243;rio por Estado</div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label>Estado</label>
+            <select id="rel-est">
+              <option value="">Todos</option>
+              <option>Ativo</option><option>Bom</option><option>Avariado</option><option>Desmobilizado</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="gerarRelEstado()">&#128203; Gerar Relat&#243;rio</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Transfer&#234;ncias do Per&#237;odo</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>De</label>
+              <input type="date" id="rel-trans-de">
+            </div>
+            <div class="form-group">
+              <label>At&#233;</label>
+              <input type="date" id="rel-trans-ate">
+            </div>
+          </div>
+          <button class="btn btn-primary" style="margin-top:10px" onclick="exportTransCSV()">&#128229; Exportar Transfer&#234;ncias</button>
+        </div>
+      </div>
+      <div id="rel-output" class="card" style="display:none;margin-top:0">
+        <div class="table-scroll">
+          <table id="rel-table"><thead></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ UTILIZADORES ═══ -->
+    <div class="page" id="page-utilizadores">
+      <div class="page-hd">
+        <div><h2>&#128100; Utilizadores</h2><p>Gest&#227;o de acessos ao sistema</p></div>
+        <button class="btn btn-primary btn-sm" onclick="openUserModal()">&#10133; Novo Utilizador</button>
+      </div>
+      <div class="grid-2">
+        <div class="table-wrap" style="grid-column:1/-1">
+          <div class="table-head-bar"><span>Utilizadores do Sistema</span></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Criado em</th><th>A&#231;&#245;es</th></tr></thead>
+              <tbody id="tbody-users"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══ MODAL DETALHE ATIVO ═══ -->
+<div class="modal-overlay" id="modal-ativo">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div style="font-size:.72rem;opacity:.7;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px" id="modal-tipo-label"></div>
+        <h3 id="modal-titulo"></h3>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-ativo')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid" id="modal-fields"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-ativo')">Fechar</button>
+      <button class="btn btn-ghost btn-sm" onclick="editAtivo()">&#9998; Editar</button>
+      <button class="btn btn-primary btn-sm" onclick="novaTransModal()">&#128260; Transferir</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL UTILIZADOR ═══ -->
+<div class="modal-overlay" id="modal-user">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-head">
+      <h3>Novo Utilizador</h3>
+      <button class="modal-close" onclick="closeModal('modal-user')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Nome Completo *</label><input type="text" id="u-nome" placeholder="Nome do utilizador"></div>
+        <div class="form-group full"><label>Email *</label><input type="email" id="u-email" placeholder="email@sml.ao"></div>
+        <div class="form-group full"><label>Senha Inicial *</label><input type="password" id="u-pass" placeholder="M&#237;nimo 6 caracteres"></div>
+        <div class="form-group full">
+          <label>Perfil de Acesso</label>
+          <select id="u-perfil">
+            <option value="visualizador">Visualizador (s&#243; leitura)</option>
+            <option value="operador">Operador (registo e transfer&#234;ncias)</option>
+            <option value="gestor">Gestor (acesso completo)</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+      </div>
+      <div id="user-alert" style="margin-top:10px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-user')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createUser()">Criar Utilizador</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc, updateDoc, query, orderBy, limit, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+/* === CONFIGURACAO FIREBASE === */
+const firebaseConfig = {
+  apiKey: "COLE_AQUI_A_SUA_API_KEY",
+  authDomain: "COLE_AQUI.firebaseapp.com",
+  projectId: "COLE_AQUI_O_PROJECT_ID",
+  storageBucket: "COLE_AQUI.appspot.com",
+  messagingSenderId: "COLE_AQUI",
+  appId: "COLE_AQUI"
+};
+/* ============================== */
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let ALL_ATIVOS = [];
+let FILTERED_ATIVOS = [];
+let CURRENT_PAGE = 1;
+const PER_PAGE = 30;
+let SORT_COL = null, SORT_DIR = 1;
+let CURRENT_ATIVO = null;
+let EDIT_MODE = false;
+let EDIT_ID = null;
+let TRANS_ATIVO = null;
+let TERMO_COLAB = null;
+
+// ── AUTH ───────────────────────────────────────────────────────────────────
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('huser-name').textContent = user.displayName || user.email.split('@')[0];
+    loadAllData();
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  }
+});
+
+window.doLogin = async function() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    errEl.style.display = 'flex';
+    errEl.textContent = e.code === 'auth/invalid-credential' ? 'Email ou senha incorrectos.' : e.message;
+  }
+};
+
+window.logout = async function() {
+  await signOut(auth);
+};
+
+// ── DATA LOADING ───────────────────────────────────────────────────────────
+async function loadAllData() {
+  document.getElementById('hdate').textContent = new Date().toLocaleDateString('pt-PT', {day:'2-digit',month:'short',year:'numeric'});
+  try {
+    const snap = await getDocs(collection(db, 'ativos'));
+    ALL_ATIVOS = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    document.getElementById('nb-ativos').textContent = ALL_ATIVOS.length;
+    populateFilters();
+    loadDashboard();
+    loadTransferencias();
+    loadDepreciacoes();
+    populateRelDept();
+    populateRelDeptUsers();
+  } catch(e) {
+    console.error('Erro ao carregar dados:', e);
+  }
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function normEstado(e) {
+  const u = (e||'').toUpperCase();
+  if (['ATIVO','ACTIVO','EM USO'].includes(u)) return 'Ativo';
+  if (u === 'BOM') return 'Bom';
+  if (u.includes('DESM')) return 'Desmobilizado';
+  if (u === 'AVARIADO' || u === 'MAU') return 'Avariado';
+  if (u.includes('MANU')) return 'Em Manut.';
+  return e || 'N/D';
+}
+
+function estadoBadge(e) {
+  const n = normEstado(e);
+  const map = { Ativo:'badge-ativo', Bom:'badge-bom', Desmobilizado:'badge-desm', Avariado:'badge-av', 'Em Manut.':'badge-res' };
+  return `<span class="badge ${map[n]||'badge-nd'}">${n}</span>`;
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  const s = String(d);
+  if (/^\d{5}$/.test(s)) {
+    const b = new Date(1899,11,30);
+    b.setDate(b.getDate() + parseInt(s));
+    return b.toLocaleDateString('pt-PT');
+  }
+  if (s.includes('T')) return new Date(s).toLocaleDateString('pt-PT');
+  return s.substring(0,10);
+}
+
+function fmtCost(v, m) {
+  if (!v) return '—';
+  return (m||'') + ' ' + Math.round(v).toLocaleString('pt-PT');
+}
+
+function showAlert(el, msg, type='success') {
+  const el2 = typeof el === 'string' ? document.getElementById(el) : el;
+  el2.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+  setTimeout(() => el2.innerHTML = '', 4000);
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+window.showPage = function(pg) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + pg)?.classList.add('active');
+  document.getElementById('nav-' + pg)?.classList.add('active');
+  if (pg === 'ativos') { FILTERED_ATIVOS = [...ALL_ATIVOS]; renderAtivos(); }
+  if (pg === 'cadastro' && !EDIT_MODE) resetCadForm();
+};
+
+// ── DASHBOARD ──────────────────────────────────────────────────────────────
+window.loadDashboard = function() {
+  document.getElementById('dash-loading').style.display = 'flex';
+  document.getElementById('dash-content').style.display = 'none';
+  const ativos = ALL_ATIVOS;
+  const total = ativos.length;
+  const eq = ativos.filter(a => a.tipo === 'Equipamento Pesado').length;
+  const operacionais = ativos.filter(a => ['Ativo','Bom','Em uso'].includes(normEstado(a.estado))).length;
+  const desm = ativos.filter(a => normEstado(a.estado) === 'Desmobilizado').length;
+  const av = ativos.filter(a => normEstado(a.estado) === 'Avariado').length;
+  const marcas = new Set(ativos.map(a => a.marca).filter(Boolean)).size;
+
+  document.getElementById('kpi-grid').innerHTML = [
+    ['Total de Ativos', total, 'Invent&aacute;rio completo', ''],
+    ['Eq. Pesados', eq, 'M&oacute;veis e imobilizados', 'b'],
+    ['Operacionais', operacionais, Math.round(operacionais/total*100)+'% do total', 'g'],
+    ['Desmobilizados', desm, 'Fora de opera&ccedil;&atilde;o', 'r'],
+    ['Avariados', av, 'Requerem aten&ccedil;&atilde;o', 'a'],
+    ['Marcas', marcas, 'Fabricantes distintos', 'v'],
+  ].map(([l,v,s,c]) => `<div class="kpi ${c}"><div class="kpi-lbl">${l}</div><div class="kpi-val">${v}</div><div class="kpi-sub">${s}</div></div>`).join('');
+
+  // Classes chart
+  const cc = {};
+  ativos.filter(a=>a.tipo==='Equipamento Pesado').forEach(a=>{ const c=a.classe||'Outros'; cc[c]=(cc[c]||0)+1; });
+  const ct = Object.entries(cc).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const mc = ct[0]?.[1]||1;
+
+  // Marcas chart
+  const mc2 = {};
+  ativos.forEach(a=>{ if(a.marca) mc2[a.marca]=(mc2[a.marca]||0)+1; });
+  const mt = Object.entries(mc2).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const mm = mt[0]?.[1]||1;
+
+  // Estado donut
+  const ep = {Ativo:0,Bom:0,Desmobilizado:0,Outros:0};
+  ativos.forEach(a => {
+    const n = normEstado(a.estado);
+    if (n==='Ativo') ep.Ativo++;
+    else if (n==='Bom') ep.Bom++;
+    else if (n==='Desmobilizado') ep.Desmobilizado++;
+    else ep.Outros++;
+  });
+  const pc=['#16a34a','#2563eb','#dc2626','#d97706'];
+  const pv=Object.values(ep).filter(v=>v>0);
+  const pl=Object.entries(ep).filter(([,v])=>v>0).map(([k])=>k);
+  let cum=-90, svg='', leg='';
+  pv.forEach((v,i)=>{
+    const a=v/total*360,r=65,cx=75,cy=75,rad=x=>x*Math.PI/180;
+    const x1=cx+r*Math.cos(rad(cum)),y1=cy+r*Math.sin(rad(cum));
+    const x2=cx+r*Math.cos(rad(cum+a)),y2=cy+r*Math.sin(rad(cum+a));
+    svg+=`<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${a>180?1:0},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${pc[i]}" opacity=".9"/>`;
+    leg+=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:.78rem"><div style="width:10px;height:10px;border-radius:50%;background:${pc[i]};flex-shrink:0"></div>${pl[i]}: <b>${v}</b></div>`;
+    cum+=a;
+  });
+  svg+=`<circle cx="75" cy="75" r="35" fill="white"/><text x="75" y="71" text-anchor="middle" font-size="12" font-weight="700" fill="#1C2B3A">${total}</text><text x="75" y="84" text-anchor="middle" font-size="8" fill="#64748B">ativos</text>`;
+
+  document.getElementById('charts-row').innerHTML = `
+    <div class="card"><div class="card-title">Classes Equip. Pesado</div>${ct.map(([l,v])=>`<div class="bar-row"><div class="bar-lbl" title="${l}">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/mc*100)}%;background:var(--ore)"></div></div><div class="bar-num">${v}</div></div>`).join('')}</div>
+    <div class="card"><div class="card-title">Top Marcas</div>${mt.map(([l,v])=>`<div class="bar-row"><div class="bar-lbl">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/mm*100)}%;background:var(--steel)"></div></div><div class="bar-num">${v}</div></div>`).join('')}</div>
+    <div class="card"><div class="card-title">Estado dos Ativos</div><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><svg width="150" height="150" viewBox="0 0 150 150">${svg}</svg><div>${leg}</div></div></div>
+  `;
+
+  // Localizacoes
+  const lc={};
+  ativos.forEach(a=>{ if(a.localizacao) lc[a.localizacao]=(lc[a.localizacao]||0)+1; });
+  const lt=Object.entries(lc).sort((a,b)=>b[1]-a[1]).slice(0,12);
+  const ml=lt[0]?.[1]||1;
+  document.getElementById('chart-locs').innerHTML = `<div class="card-title">Top Localiza&ccedil;&otilde;es / Sectores</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0 20px">${lt.map(([l,v])=>`<div class="bar-row"><div class="bar-lbl" title="${l}">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/ml*100)}%;background:var(--amber)"></div></div><div class="bar-num">${v}</div></div>`).join('')}</div>`;
+
+  // Anos + recentes
+  const ac={};
+  ativos.forEach(a=>{
+    const d=String(a.dataIncorporacao||'');
+    const y=d.includes('T')?new Date(d).getFullYear().toString():d.substring(0,4);
+    if(y>='2015'&&y<='2026') ac[y]=(ac[y]||0)+1;
+  });
+  const ae=Object.entries(ac).sort((a,b)=>a[0]<b[0]?-1:1);
+  const ma=Math.max(...ae.map(x=>x[1]),1);
+  document.getElementById('chart-anos').innerHTML = `<div class="card-title">Incorpora&ccedil;&otilde;es por Ano</div><div style="display:flex;align-items:flex-end;gap:5px;height:100px;padding-top:8px">${ae.map(([yr,v])=>`<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px"><div style="font-size:9px;color:var(--muted)">${v}</div><div style="background:var(--ore);width:100%;border-radius:3px 3px 0 0;height:${Math.round(v/ma*70)}px;min-height:3px" title="${yr}: ${v}"></div><div style="font-size:9px;color:var(--muted);writing-mode:vertical-lr;transform:rotate(180deg);height:22px">${yr}</div></div>`).join('')}</div>`;
+
+  const recent = [...ativos].sort((a,b)=>{
+    const da=a.criadoEm?.seconds||0, db=b.criadoEm?.seconds||0;
+    return db-da;
+  }).slice(0,6);
+  document.getElementById('recent-list').innerHTML = `<div class="card-title">&#127381; Ativos Recentes</div>${recent.map(a=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream-d);font-size:.82rem"><div><div style="font-weight:500;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.descricao||'—'}</div><div style="font-size:.73rem;color:var(--muted)">${a.marca||''} ${a.modelo||''}</div></div>${estadoBadge(a.estado)}</div>`).join('')}`;
+
+  document.getElementById('dash-loading').style.display = 'none';
+  document.getElementById('dash-content').style.display = 'block';
+};
+
+// ── ATIVOS TABLE ───────────────────────────────────────────────────────────
+function populateFilters() {
+  const marcas = [...new Set(ALL_ATIVOS.map(a=>a.marca).filter(Boolean))].sort();
+  const sm = document.getElementById('f-marca');
+  sm.innerHTML = '<option value="">Todas as Marcas</option>' + marcas.map(m=>`<option>${m}</option>`).join('');
+}
+
+window.filterAtivos = function() {
+  const q = document.getElementById('s-ativos').value.toLowerCase();
+  const ft = document.getElementById('f-tipo').value;
+  const fe = document.getElementById('f-estado').value;
+  const fm = document.getElementById('f-marca').value;
+  FILTERED_ATIVOS = ALL_ATIVOS.filter(a => {
+    if (ft && a.tipo !== ft) return false;
+    if (fe && normEstado(a.estado) !== fe) return false;
+    if (fm && a.marca !== fm) return false;
+    if (q && ![a.descricao,a.marca,a.modelo,a.serie,a.codigo,a.equipamentoCod,a.localizacao,a.colaborador].join(' ').toLowerCase().includes(q)) return false;
+    return true;
+  });
+  CURRENT_PAGE = 1;
+  renderAtivos();
+};
+
+window.clearFiltersAtivos = function() {
+  document.getElementById('s-ativos').value='';
+  document.getElementById('f-tipo').value='';
+  document.getElementById('f-estado').value='';
+  document.getElementById('f-marca').value='';
+  FILTERED_ATIVOS = [...ALL_ATIVOS];
+  renderAtivos();
+};
+
+window.sortAtivos = function(col) {
+  if (SORT_COL === col) SORT_DIR *= -1;
+  else { SORT_COL = col; SORT_DIR = 1; }
+  const keys = ['nInventario','codigo','descricao','marca','dataIncorporacao','localizacao','estado'];
+  const k = keys[col];
+  FILTERED_ATIVOS.sort((a,b) => {
+    const av=a[k]??'', bv=b[k]??'';
+    if (typeof av==='number') return SORT_DIR*(av-bv);
+    return SORT_DIR*String(av).localeCompare(String(bv),'pt');
+  });
+  renderAtivos();
+};
+
+function renderAtivos() {
+  const total = FILTERED_ATIVOS.length;
+  const start = (CURRENT_PAGE-1)*PER_PAGE;
+  const slice = FILTERED_ATIVOS.slice(start, start+PER_PAGE);
+  document.getElementById('cnt-ativos').textContent = total + ' ativos';
+  const tbody = document.getElementById('tbody-ativos');
+  if (!slice.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted)">Nenhum resultado encontrado</td></tr>';
+  } else {
+    tbody.innerHTML = slice.map(a => `<tr onclick="openAtivo('${a.id}')">
+      <td class="td-mono">${a.nInventario||'—'}</td>
+      <td class="td-mono">${a.codigo||'—'}</td>
+      <td class="td-desc" title="${a.descricao||''}">${a.descricao||'—'}</td>
+      <td>${a.marca||'—'}</td>
+      <td class="td-mono">${fmtDate(a.dataIncorporacao)}</td>
+      <td class="td-loc" title="${a.localizacao||''}">${a.localizacao||'—'}</td>
+      <td>${estadoBadge(a.estado)}</td>
+      <td><span class="${a.tipo==='Equipamento Pesado'?'tipo-eq':'tipo-adm'}">${a.tipo==='Equipamento Pesado'?'Pesado':'Bem'}</span></td>
+      <td style="text-align:center"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();editAtivoById('${a.id}')">&#9998;</button></td>
+    </tr>`).join('');
+  }
+  // Pagination
+  const pages = Math.max(1, Math.ceil(total/PER_PAGE));
+  const cur = CURRENT_PAGE;
+  let ph = `<span>${start+1}–${Math.min(start+PER_PAGE,total)} de ${total}</span><div class="pag-btns">`;
+  ph += `<button class="pag-btn" onclick="goPageAtivos(1)" ${cur===1?'disabled':''}>&#171;</button>`;
+  ph += `<button class="pag-btn" onclick="goPageAtivos(${cur-1})" ${cur===1?'disabled':''}>&#8249;</button>`;
+  const lo=Math.max(1,cur-2), hi=Math.min(pages,cur+2);
+  for(let p=lo;p<=hi;p++) ph+=`<button class="pag-btn${p===cur?' cur':''}" onclick="goPageAtivos(${p})">${p}</button>`;
+  ph += `<button class="pag-btn" onclick="goPageAtivos(${cur+1})" ${cur===pages?'disabled':''}>&#8250;</button>`;
+  ph += `<button class="pag-btn" onclick="goPageAtivos(${pages})" ${cur===pages?'disabled':''}>&#187;</button></div>`;
+  document.getElementById('pag-ativos').innerHTML = ph;
+}
+
+window.goPageAtivos = function(p) {
+  const pages = Math.ceil(FILTERED_ATIVOS.length/PER_PAGE);
+  CURRENT_PAGE = Math.max(1, Math.min(pages, p));
+  renderAtivos();
+};
+
+// ── ATIVO DETAIL MODAL ─────────────────────────────────────────────────────
+window.openAtivo = function(id) {
+  const a = ALL_ATIVOS.find(x => x.id === id);
+  if (!a) return;
+  CURRENT_ATIVO = a;
+  document.getElementById('modal-tipo-label').textContent = a.tipo || 'Ativo Patrimonial';
+  document.getElementById('modal-titulo').textContent = a.descricao || a.codigo || 'Ativo';
+  const fields = [
+    {s:'Identificação'},
+    {l:'Código Patrimonial', v:a.codigo},
+    {l:'Cód. Equipamento', v:a.equipamentoCod},
+    {l:'TAG', v:a.tag},
+    {l:'Nº Série / Chassi', v:a.serie, mono:true},
+    {l:'Matrícula / Placa', v:a.matricula},
+    {s:'Informação'},
+    {l:'Marca', v:a.marca},
+    {l:'Modelo', v:a.modelo},
+    {l:'Classe / Tipo', v:a.classe},
+    {l:'Data Incorporação', v:fmtDate(a.dataIncorporacao)},
+    {l:'Estado', badge:a.estado},
+    {s:'Localização'},
+    {l:'Localização', v:a.localizacao},
+    {l:'Área / Departamento', v:a.areaDepartamento},
+    {l:'Colaborador', v:a.colaborador},
+    {l:'Categoria', v:a.categoriaColaborador},
+    {s:'Aquisição'},
+    {l:'Fornecedor', v:a.fornecedor},
+    {l:'Custo', v:fmtCost(a.custoAOA||a.custoUSD||a.custoEUR, a.moeda)},
+    {l:'Observações', v:a.observacoes},
+  ].filter(f=>f.s||f.v||f.badge);
+
+  document.getElementById('modal-fields').innerHTML = fields.map(f=>
+    f.s ? `<div class="detail-sec">${f.s}</div>` :
+    `<div class="detail-field"><div class="detail-lbl">${f.l}</div>${f.badge?`<div>${estadoBadge(f.badge)}</div>`:`<div class="detail-val${f.mono?' mono':''}">${f.v||'—'}</div>`}</div>`
+  ).join('');
+
+  document.getElementById('modal-ativo').classList.add('open');
+};
+
+window.closeModal = function(id) {
+  document.getElementById(id).classList.remove('open');
+};
+
+window.editAtivo = function() {
+  if (!CURRENT_ATIVO) return;
+  closeModal('modal-ativo');
+  editAtivoById(CURRENT_ATIVO.id);
+};
+
+window.editAtivoById = function(id) {
+  const a = ALL_ATIVOS.find(x => x.id === id);
+  if (!a) return;
+  EDIT_MODE = true;
+  EDIT_ID = id;
+  document.getElementById('cad-title').textContent = '✏️ Editar Ativo';
+  document.getElementById('cad-submit-btn').textContent = '💾 Actualizar Ativo';
+  // Fill form
+  ['codigo','equip-cod','tag','serie','matricula','descricao','marca','modelo','classe','area','colaborador','categoria','fornecedor','factura','obs'].forEach(k => {
+    const map={codigo:'codigo','equip-cod':'equipamentoCod',tag:'tag',serie:'serie',matricula:'matricula',descricao:'descricao',marca:'marca',modelo:'modelo',classe:'classe',area:'areaDepartamento',colaborador:'colaborador',categoria:'categoriaColaborador',fornecedor:'fornecedor',factura:'nFactura',obs:'observacoes'};
+    const el = document.getElementById('f-'+k);
+    if(el) el.value = a[map[k]]||'';
+  });
+  document.getElementById('f-localizacao').value = a.localizacao||'';
+  document.getElementById('f-tipo-bem').value = a.tipo||'';
+  document.getElementById('f-estado-cad').value = normEstado(a.estado);
+  document.getElementById('f-moeda').value = a.moeda||'AOA';
+  const custo = a.custoAOA||a.custoUSD||a.custoEUR||0;
+  document.getElementById('f-custo').value = custo||'';
+  document.getElementById('f-vida-util').value = a.vidaUtil||'';
+  if(a.dataIncorporacao && !String(a.dataIncorporacao).includes('T')) {
+    document.getElementById('f-data').value = String(a.dataIncorporacao).substring(0,10);
+  }
+  showPage('cadastro');
+};
+
+// ── CADASTRO ───────────────────────────────────────────────────────────────
+function resetCadForm() {
+  EDIT_MODE = false; EDIT_ID = null;
+  document.getElementById('cad-title').textContent = '➕ Novo Ativo';
+  document.getElementById('cad-submit-btn').textContent = '💾 Guardar Ativo';
+  document.getElementById('cad-form').reset();
+}
+
+window.saveAtivo = async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('cad-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'A guardar...';
+  const moeda = document.getElementById('f-moeda').value;
+  const custo = parseFloat(document.getElementById('f-custo').value)||0;
+  const data = {
+    codigo: document.getElementById('f-codigo').value.trim(),
+    equipamentoCod: document.getElementById('f-equip-cod').value.trim(),
+    tag: document.getElementById('f-tag').value.trim(),
+    serie: document.getElementById('f-serie').value.trim(),
+    matricula: document.getElementById('f-matricula').value.trim(),
+    descricao: document.getElementById('f-descricao').value.trim(),
+    marca: document.getElementById('f-marca').value.trim(),
+    modelo: document.getElementById('f-modelo').value.trim(),
+    classe: document.getElementById('f-classe').value.trim(),
+    tipo: document.getElementById('f-tipo-bem').value,
+    dataIncorporacao: document.getElementById('f-data').value,
+    estado: document.getElementById('f-estado-cad').value,
+    localizacao: document.getElementById('f-localizacao').value.trim(),
+    areaDepartamento: document.getElementById('f-area').value.trim(),
+    colaborador: document.getElementById('f-colaborador').value.trim(),
+    categoriaColaborador: document.getElementById('f-categoria').value.trim(),
+    fornecedor: document.getElementById('f-fornecedor').value.trim(),
+    nFactura: document.getElementById('f-factura').value.trim(),
+    moeda,
+    custoAOA: moeda==='AOA'||moeda==='AKZ' ? custo : 0,
+    custoUSD: moeda==='USD' ? custo : 0,
+    custoEUR: moeda==='EUR' ? custo : 0,
+    vidaUtil: parseInt(document.getElementById('f-vida-util').value)||null,
+    observacoes: document.getElementById('f-obs').value.trim(),
+    atualizadoEm: serverTimestamp(),
+  };
+  try {
+    if (EDIT_MODE && EDIT_ID) {
+      await updateDoc(doc(db,'ativos',EDIT_ID), data);
+      const idx = ALL_ATIVOS.findIndex(a=>a.id===EDIT_ID);
+      if(idx>=0) ALL_ATIVOS[idx] = {...ALL_ATIVOS[idx],...data};
+      showAlert('cad-alert','Ativo actualizado com sucesso!','success');
+    } else {
+      data.criadoEm = serverTimestamp();
+      data.nInventario = ALL_ATIVOS.length + 1;
+      const ref = await addDoc(collection(db,'ativos'), data);
+      ALL_ATIVOS.push({id:ref.id,...data});
+      document.getElementById('nb-ativos').textContent = ALL_ATIVOS.length;
+      showAlert('cad-alert','Ativo registado com sucesso!','success');
+      resetCadForm();
+    }
+    EDIT_MODE = false; EDIT_ID = null;
+  } catch(err) {
+    showAlert('cad-alert','Erro ao guardar: '+err.message,'error');
+  }
+  btn.disabled = false;
+  btn.textContent = EDIT_MODE ? '💾 Actualizar Ativo' : '💾 Guardar Ativo';
+};
+
+// ── TRANSFERENCIAS ─────────────────────────────────────────────────────────
+let TR_SELECTED = null;
+
+window.searchAtivoTrans = function() {
+  const q = document.getElementById('tr-search').value.toLowerCase();
+  if (!q || q.length < 2) { document.getElementById('tr-results').innerHTML=''; return; }
+  const res = ALL_ATIVOS.filter(a=>[a.descricao,a.codigo,a.equipamentoCod,a.marca].join(' ').toLowerCase().includes(q)).slice(0,5);
+  document.getElementById('tr-results').innerHTML = res.map(a=>`<div onclick="selectAtivoTrans('${a.id}')" style="padding:7px 10px;border:1px solid var(--cream-d);border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.83rem;hover:background:var(--cream)"><b>${a.descricao}</b> <span style="color:var(--muted);font-size:.76rem">${a.codigo||''}</span></div>`).join('');
+};
+
+window.selectAtivoTrans = function(id) {
+  const a = ALL_ATIVOS.find(x=>x.id===id);
+  if (!a) return;
+  TR_SELECTED = a;
+  document.getElementById('tr-results').innerHTML='';
+  document.getElementById('tr-search').value = a.descricao||a.codigo||'';
+  document.getElementById('tr-ativo-sel').style.display='block';
+  document.getElementById('tr-ativo-info').textContent = (a.descricao||'—') + ' | ' + (a.codigo||'—');
+  document.getElementById('tr-origem').value = a.localizacao||'';
+  document.getElementById('tr-colab-orig').value = a.colaborador||'';
+  const dEl = document.getElementById('tr-data');
+  if(!dEl.value) dEl.value = new Date().toISOString().substring(0,10);
+};
+
+window.saveTransferencia = async function() {
+  if (!TR_SELECTED) { showAlert('tr-alert','Selecciona um ativo para transferir.','error'); return; }
+  const destino = document.getElementById('tr-destino').value.trim();
+  if (!destino) { showAlert('tr-alert','O destino é obrigatório.','error'); return; }
+  const tr = {
+    ativoId: TR_SELECTED.id,
+    atCodigo: TR_SELECTED.codigo||'',
+    atDescricao: TR_SELECTED.descricao||'',
+    origem: document.getElementById('tr-origem').value.trim(),
+    destino,
+    colaboradorOrig: document.getElementById('tr-colab-orig').value.trim(),
+    colaboradorDest: document.getElementById('tr-colab-dest').value.trim(),
+    data: document.getElementById('tr-data').value,
+    motivo: document.getElementById('tr-motivo').value.trim(),
+    observacoes: document.getElementById('tr-obs').value.trim(),
+    criadoEm: serverTimestamp(),
+  };
+  try {
+    await addDoc(collection(db,'transferencias'), tr);
+    await updateDoc(doc(db,'ativos',TR_SELECTED.id), {
+      localizacao: destino,
+      colaborador: tr.colaboradorDest||TR_SELECTED.colaborador,
+      atualizadoEm: serverTimestamp(),
+    });
+    const idx = ALL_ATIVOS.findIndex(a=>a.id===TR_SELECTED.id);
+    if(idx>=0){ ALL_ATIVOS[idx].localizacao=destino; if(tr.colaboradorDest) ALL_ATIVOS[idx].colaborador=tr.colaboradorDest; }
+    showAlert('tr-alert','Transferência registada com sucesso!','success');
+    TR_SELECTED=null;
+    document.getElementById('tr-search').value='';
+    document.getElementById('tr-ativo-sel').style.display='none';
+    document.getElementById('tr-destino').value='';
+    document.getElementById('tr-colab-dest').value='';
+    document.getElementById('tr-motivo').value='';
+    document.getElementById('tr-obs').value='';
+    loadTransferencias();
+  } catch(err) {
+    showAlert('tr-alert','Erro: '+err.message,'error');
+  }
+};
+
+window.novaTransModal = function() {
+  if(!CURRENT_ATIVO) return;
+  closeModal('modal-ativo');
+  showPage('transferencias');
+  selectAtivoTrans(CURRENT_ATIVO.id);
+};
+
+async function loadTransferencias() {
+  const el = document.getElementById('trans-list');
+  if (!el) return;
+  try {
+    const q2 = query(collection(db,'transferencias'), orderBy('criadoEm','desc'), limit(10));
+    const snap = await getDocs(q2);
+    if(snap.empty){ el.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>Sem transferências registadas.</p></div>'; return; }
+    el.innerHTML = snap.docs.map(d=>{
+      const t=d.data();
+      return `<div class="trans-row"><div class="tr-desc">${t.atDescricao||t.atCodigo||'—'}</div><div class="tr-meta"><span class="tr-arrow">&#8594;</span> ${t.destino||'—'} &nbsp;|&nbsp; ${t.data||'—'} ${t.motivo?'&nbsp;|&nbsp;'+t.motivo:''}</div></div>`;
+    }).join('');
+  } catch(e){ el.innerHTML='<div class="alert alert-warning">Não foi possível carregar.</div>'; }
+}
+
+// ── TERMOS ─────────────────────────────────────────────────────────────────
+window.searchColaborador = function() {
+  const q = document.getElementById('termo-search').value.toLowerCase();
+  if (!q || q.length < 2) { document.getElementById('termo-colab-list').innerHTML=''; return; }
+  const colabs = [...new Set(ALL_ATIVOS.map(a=>a.colaborador).filter(Boolean))];
+  const res = colabs.filter(c=>c.toLowerCase().includes(q)).slice(0,6);
+  document.getElementById('termo-colab-list').innerHTML = res.map(c=>`<div onclick="selectColabTermo('${c.replace(/'/g,"\\'")}' )" style="padding:7px 10px;border:1px solid var(--cream-d);border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.83rem">${c}</div>`).join('');
+};
+
+window.selectColabTermo = function(nome) {
+  TERMO_COLAB = nome;
+  document.getElementById('termo-search').value = nome;
+  document.getElementById('termo-colab-list').innerHTML='';
+  const ativos = ALL_ATIVOS.filter(a=>a.colaborador===nome);
+  document.getElementById('termo-colab-sel').style.display='block';
+  document.getElementById('termo-colab-info').textContent = nome;
+  document.getElementById('termo-ativos-count').textContent = ativos.length + ' ativo(s) sob responsabilidade';
+};
+
+window.previewTermo = function() {
+  if (!TERMO_COLAB) return;
+  const ativos = ALL_ATIVOS.filter(a=>a.colaborador===TERMO_COLAB);
+  const hoje = new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'});
+  let rows = ativos.map((a,i)=>`<tr><td>${i+1}</td><td>${a.codigo||'—'}</td><td>${a.descricao||'—'}</td><td>${a.marca||'—'} ${a.modelo||''}</td><td>${a.localizacao||'—'}</td><td>${normEstado(a.estado)}</td></tr>`).join('');
+  document.getElementById('termo-preview').innerHTML = `
+    <div class="termo-preview" id="termo-print-area">
+      <div class="termo-header">
+        <h2>SOCIEDADE MINEIRA DO LUELE</h2>
+        <p>Direc&ccedil;&atilde;o de Aprovisionamento e Log&iacute;stica &middot; Sector de Patrim&oacute;nio</p>
+        <h2 style="margin-top:12px">TERMO DE RESPONSABILIDADE DE BENS PATRIMONIAIS</h2>
+      </div>
+      <p>Eu, <strong>${TERMO_COLAB}</strong>, declaro ter recebido os seguintes bens patrimoniais da Sociedade Mineira do Luele, comprometendo-me a zelar pela sua conserva&ccedil;&atilde;o e a devolv&ecirc;-los nas mesmas condi&ccedil;&otilde;es quando solicitado.</p>
+      <table class="termo-table">
+        <thead><tr><th>#</th><th>C&oacute;digo</th><th>Descri&ccedil;&atilde;o</th><th>Marca / Modelo</th><th>Localiza&ccedil;&atilde;o</th><th>Estado</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <p style="font-size:.8rem;color:var(--muted)">Total de itens: <strong>${ativos.length}</strong></p>
+      <div class="termo-sigs">
+        <div class="sig-block">${TERMO_COLAB}<br>Colaborador Respons&aacute;vel</div>
+        <div class="sig-block">Sector de Patrim&oacute;nio<br>Data: ${hoje}</div>
+      </div>
+    </div>`;
+};
+
+window.printTermo = function() {
+  const area = document.getElementById('termo-print-area');
+  if (!area) { previewTermo(); }
+  window.print();
+};
+
+// ── DEPRECIACOES ───────────────────────────────────────────────────────────
+window.calcDepreciacoes = async function() {
+  const el = document.getElementById('tbody-dep');
+  const depAtivos = ALL_ATIVOS.filter(a=>(a.custoAOA||a.custoUSD||a.custoEUR)&&a.vidaUtil&&a.dataIncorporacao);
+  if(!depAtivos.length){ el.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">Sem ativos com dados de deprecia&ccedil;&atilde;o completos.</td></tr>'; return; }
+  const now = new Date();
+  let totalCusto=0, totalDepr=0, totalVC=0;
+  const rows = depAtivos.map(a=>{
+    const custo = a.custoAOA||a.custoUSD||a.custoEUR||0;
+    const moeda = a.moeda||'AOA';
+    const dtStr = String(a.dataIncorporacao||'');
+    const dt = dtStr.includes('T') ? new Date(dtStr) : dtStr.length>=10 ? new Date(dtStr.substring(0,10)) : null;
+    const anos = dt ? Math.max(0,(now-dt)/(1000*60*60*24*365.25)) : 0;
+    const vu = a.vidaUtil||10;
+    const deprAcum = Math.min(custo, custo/vu*anos);
+    const vc = Math.max(0, custo-deprAcum);
+    totalCusto+=custo; totalDepr+=deprAcum; totalVC+=vc;
+    return `<tr>
+      <td class="td-mono">${a.codigo||'—'}</td>
+      <td class="td-desc" title="${a.descricao||''}">${a.descricao||'—'}</td>
+      <td class="td-mono">${fmtDate(a.dataIncorporacao)}</td>
+      <td style="text-align:center">${vu} anos</td>
+      <td style="text-align:right;font-family:monospace;font-size:.78rem">${moeda} ${Math.round(custo).toLocaleString('pt-PT')}</td>
+      <td style="text-align:center">${anos.toFixed(1)} anos</td>
+      <td style="text-align:right;font-family:monospace;font-size:.78rem;color:var(--red)">${moeda} ${Math.round(deprAcum).toLocaleString('pt-PT')}</td>
+      <td style="text-align:right;font-family:monospace;font-size:.78rem;color:var(--green)">${moeda} ${Math.round(vc).toLocaleString('pt-PT')}</td>
+      <td>${estadoBadge(a.estado)}</td>
+    </tr>`;
+  });
+  el.innerHTML = rows.join('');
+  document.getElementById('dep-kpis').innerHTML = [
+    ['Custo Total', Math.round(totalCusto).toLocaleString('pt-PT'), 'Valor original dos ativos', ''],
+    ['Depr. Acumulada', Math.round(totalDepr).toLocaleString('pt-PT'), 'Total depreciado', 'r'],
+    ['Valor Actual Total', Math.round(totalVC).toLocaleString('pt-PT'), 'Valor líquido contabilístico', 'g'],
+  ].map(([l,v,s,c])=>`<div class="kpi ${c}"><div class="kpi-lbl">${l}</div><div class="kpi-val" style="font-size:1.2rem">${v}</div><div class="kpi-sub">${s}</div></div>`).join('');
+};
+
+function loadDepreciacoes() { calcDepreciacoes(); }
+
+// ── RELATORIOS ─────────────────────────────────────────────────────────────
+function populateRelDept() {
+  const depts = [...new Set(ALL_ATIVOS.map(a=>a.areaDepartamento||a.localizacao).filter(Boolean))].sort();
+  ['rel-dept'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML='<option value="">Todos</option>'+depts.map(d=>`<option>${d}</option>`).join('');
+  });
+}
+function populateRelDeptUsers() {
+  const locs = [...new Set(ALL_ATIVOS.map(a=>a.localizacao).filter(Boolean))].sort();
+}
+
+window.exportCSV = function() {
+  const cols=['codigo','equipamentoCod','tag','serie','descricao','marca','modelo','classe','tipo','dataIncorporacao','estado','localizacao','areaDepartamento','colaborador','moeda','custoAOA','custoUSD','custoEUR','fornecedor','matricula','observacoes'];
+  const header = cols.join(';');
+  const rows = ALL_ATIVOS.map(a=>cols.map(c=>'"'+(String(a[c]||'').replace(/"/g,'""'))+'"').join(';'));
+  const csv = '\uFEFF'+[header,...rows].join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a2 = document.createElement('a');
+  a2.href=url; a2.download='LUELE_PAT_Inventario_'+new Date().toISOString().substring(0,10)+'.csv';
+  a2.click(); URL.revokeObjectURL(url);
+};
+
+window.gerarRelDept = function() {
+  const dept = document.getElementById('rel-dept').value;
+  const data = dept ? ALL_ATIVOS.filter(a=>a.areaDepartamento===dept||a.localizacao===dept) : ALL_ATIVOS;
+  renderRelTable(data,'Relatório por Departamento');
+};
+
+window.gerarRelEstado = function() {
+  const est = document.getElementById('rel-est').value;
+  const data = est ? ALL_ATIVOS.filter(a=>normEstado(a.estado)===est) : ALL_ATIVOS;
+  renderRelTable(data,'Relatório por Estado');
+};
+
+function renderRelTable(data, title) {
+  const el = document.getElementById('rel-output');
+  el.style.display='block';
+  el.querySelector('.card-title')?.remove();
+  const tbl = document.getElementById('rel-table');
+  tbl.innerHTML = `<caption style="text-align:left;font-weight:700;margin-bottom:8px;caption-side:top">${title} — ${data.length} ativos</caption>
+    <thead><tr><th>Código</th><th>Descrição</th><th>Marca</th><th>Localização</th><th>Estado</th><th>Tipo</th></tr></thead>
+    <tbody>${data.map(a=>`<tr><td class="td-mono">${a.codigo||'—'}</td><td class="td-desc">${a.descricao||'—'}</td><td>${a.marca||'—'}</td><td class="td-loc">${a.localizacao||'—'}</td><td>${estadoBadge(a.estado)}</td><td>${a.tipo==='Equipamento Pesado'?'Pesado':'Bem'}</td></tr>`).join('')}</tbody>`;
+}
+
+window.exportTransCSV = async function() {
+  try {
+    const de = document.getElementById('rel-trans-de').value;
+    const ate = document.getElementById('rel-trans-ate').value;
+    let q2 = query(collection(db,'transferencias'),orderBy('criadoEm','desc'));
+    const snap = await getDocs(q2);
+    let trans = snap.docs.map(d=>d.data());
+    if(de) trans=trans.filter(t=>t.data>=de);
+    if(ate) trans=trans.filter(t=>t.data<=ate);
+    const cols=['atCodigo','atDescricao','origem','destino','colaboradorOrig','colaboradorDest','data','motivo','observacoes'];
+    const csv='\uFEFF'+[cols.join(';'),...trans.map(t=>cols.map(c=>'"'+(String(t[c]||'')).replace(/"/g,'""')+'"').join(';'))].join('\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a2=document.createElement('a');
+    a2.href=url;a2.download='LUELE_PAT_Transferencias_'+new Date().toISOString().substring(0,10)+'.csv';
+    a2.click();URL.revokeObjectURL(url);
+  } catch(e){ alert('Erro ao exportar: '+e.message); }
+};
+
+// ── UTILIZADORES ───────────────────────────────────────────────────────────
+window.openUserModal = function() {
+  document.getElementById('modal-user').classList.add('open');
+  document.getElementById('user-alert').innerHTML='';
+};
+
+window.createUser = async function() {
+  const nome=document.getElementById('u-nome').value.trim();
+  const email=document.getElementById('u-email').value.trim();
+  const pass=document.getElementById('u-pass').value;
+  const perfil=document.getElementById('u-perfil').value;
+  if(!nome||!email||!pass){ showAlert('user-alert','Preenche todos os campos obrigatórios.','error'); return; }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await setDoc(doc(db,'utilizadores',cred.user.uid),{nome,email,perfil,criadoEm:serverTimestamp()});
+    closeModal('modal-user');
+    loadUsers();
+    showAlert('user-alert','Utilizador criado!','success');
+  } catch(e){ showAlert('user-alert',e.message,'error'); }
+};
+
+async function loadUsers() {
+  const el=document.getElementById('tbody-users');
+  if(!el) return;
+  try{
+    const snap=await getDocs(collection(db,'utilizadores'));
+    if(snap.empty){ el.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">Sem utilizadores registados.</td></tr>'; return; }
+    el.innerHTML=snap.docs.map(d=>{
+      const u=d.data();
+      return `<tr><td>${u.nome||'—'}</td><td class="td-mono">${u.email||'—'}</td><td><span class="badge badge-ativo">${u.perfil||'—'}</span></td><td class="td-mono">${u.criadoEm?.toDate?.().toLocaleDateString('pt-PT')||'—'}</td><td><button class="btn btn-ghost btn-sm">&#128065;</button></td></tr>`;
+    }).join('');
+  } catch(e){ el.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">Sem permissão para ver utilizadores.</td></tr>'; }
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+FILTERED_ATIVOS = [...ALL_ATIVOS];
+document.getElementById('hdate').textContent = new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'});
+document.addEventListener('keydown', e => { if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open')); });
+
+</script>
+</body>
+</html>
