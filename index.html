@@ -1493,6 +1493,127 @@ window.reimprimir = async function(id) {
   } catch(e) { alert('Erro: '+e.message); }
 };
 
+window.previewTermo = function() {
+  if (!TERMO_COLAB) { alert('Selecciona primeiro um colaborador.'); return; }
+  const ativos = window._TERMO_ATIVOS || [];
+  if (!ativos.length) {
+    document.getElementById('termo-preview').innerHTML='<div class="alert alert-warning">Nenhum ativo no termo. Adiciona pelo menos um ativo.</div>';
+    return;
+  }
+  const hoje = new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'});
+  const dept = ativos[0]?.areaDepartamento||ativos[0]?.localizacao||'';
+  const rows2 = ativos.map((a,i)=>`<tr>
+    <td style="text-align:center;border:1px solid #ccc;padding:5px 4px">${i+1}</td>
+    <td style="border:1px solid #ccc;padding:5px 6px;font-size:.72rem;font-family:monospace">${a.equipamentoCod||a.codigo||'—'}</td>
+    <td style="border:1px solid #ccc;padding:5px 6px;font-weight:500">${a.descricao||'—'}</td>
+    <td style="text-align:center;border:1px solid #ccc;padding:5px 4px">1</td>
+    <td style="text-align:center;border:1px solid #ccc;padding:5px 4px">UN</td>
+    <td style="border:1px solid #ccc;padding:5px 6px">${a.marca||'—'}</td>
+    <td style="border:1px solid #ccc;padding:5px 6px">${a.modelo||'—'}</td>
+    <td style="border:1px solid #ccc;padding:5px 6px;font-size:.7rem;font-family:monospace">${a.serie||'—'}</td>
+    <td style="border:1px solid #ccc;padding:5px 6px;font-size:.7rem;font-family:monospace">${a.codigo||'—'}</td>
+    <td style="text-align:center;border:1px solid #ccc;padding:5px 4px">${a.nInventario||'—'}</td>
+    <td style="text-align:center;border:1px solid #ccc;padding:5px 4px;font-size:.72rem">${new Date().toLocaleDateString('pt-PT')}</td>
+    <td style="border:1px solid #ccc;padding:5px 6px"></td>
+    <td style="text-align:right;border:1px solid #ccc;padding:5px 6px;font-family:monospace;font-size:.72rem">${a.custoUSD?Math.round(a.custoUSD).toLocaleString('pt-PT'):'—'}</td>
+    <td style="border:1px solid #ccc;padding:5px 6px"></td>
+  </tr>`).join('');
+
+  document.getElementById('termo-preview').innerHTML = `
+    <div class="termo-preview" id="termo-print-area">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:50px;height:50px;background:#1A6B2F;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:13px;flex-shrink:0">SML</div>
+          <div>
+            <div style="font-size:.95rem;font-weight:800;color:#1A6B2F;letter-spacing:.03em">SOCIEDADE MINEIRA DO LUELE LDA.</div>
+            <div style="font-size:.72rem;color:#64748B">Direc&ccedil;&atilde;o de Aprovisionamento e Log&iacute;stica &middot; Sector de Patrim&oacute;nio</div>
+          </div>
+        </div>
+        <div style="text-align:right;font-size:.72rem;color:#64748B">
+          <div style="font-weight:700;color:#1A1A1A;font-size:.78rem">LUELE.PAL.MOD.018.00</div>
+          <div>Emiss&atilde;o: ${hoje}</div>
+        </div>
+      </div>
+      <div style="background:#1A6B2F;color:#fff;text-align:center;padding:7px;font-size:.9rem;font-weight:800;letter-spacing:.08em;margin-bottom:12px;border-radius:3px">
+        TERMO DE RESPONSABILIDADE PATRIMONIAL
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:10px;font-size:.8rem">
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px 10px;width:55%">
+            <div style="font-size:.63rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Nome do Funcion&aacute;rio (a)</div>
+            <div style="font-weight:700;font-size:.88rem">${TERMO_COLAB}</div>
+          </td>
+          <td style="border:1px solid #ccc;padding:6px 10px;width:20%">
+            <div style="font-size:.63rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">N&ordm; Mecanogr&aacute;fico</div>
+            <div style="min-height:18px">&nbsp;</div>
+          </td>
+          <td style="border:1px solid #ccc;padding:6px 10px;width:25%">
+            <div style="font-size:.63rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Data de Admiss&atilde;o</div>
+            <div style="min-height:18px">&nbsp;</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px 10px">
+            <div style="font-size:.63rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Fun&ccedil;&atilde;o</div>
+            <div style="font-weight:500;min-height:18px">${ativos[0]?.categoriaColaborador||'&nbsp;'}</div>
+          </td>
+          <td colspan="2" style="border:1px solid #ccc;padding:6px 10px">
+            <div style="font-size:.63rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Direc&ccedil;&atilde;o / Departamento / Sector / Sec&ccedil;&atilde;o</div>
+            <div style="font-weight:500;min-height:18px">${dept||'&nbsp;'}</div>
+          </td>
+        </tr>
+      </table>
+      <div style="border:1px solid #ccc;padding:9px 12px;margin-bottom:10px;font-size:.74rem;line-height:1.7;text-align:justify;background:#fafafa">
+        <strong>DECLARO QUE RECEBI DA SOCIEDADE MINEIRA DO LUELE LDA. RESPONSABILIZANDO-ME PELA GUARDA, USO CORRECTO E OBRIGAT&Oacute;RIO DOS BENS PATRIMONIAIS ABAIXO RELACIONADOS.</strong><br>
+        AUTORIZO A DEDUZIR DO MEU SAL&Aacute;RIO OU RESCIS&Atilde;O A IMPORT&Acirc;NCIA EQUIVALENTE AO VALOR DOS MESMOS, CASO SEJAM INUTILIZADOS OU EXTRAVIADOS POR DESCUIDO DE GUARDA OU POR M&Aacute; CONSERVA&Ccedil;&Atilde;O DOS MESMOS.
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:.68rem;table-layout:fixed">
+        <thead>
+          <tr style="background:#1A6B2F;color:#fff">
+            <th style="padding:5px 4px;text-align:center;width:4%;border:1px solid #0d4a1e">N&ordm;</th>
+            <th style="padding:5px 4px;width:11%;border:1px solid #0d4a1e">N&ordm; Imobilizado</th>
+            <th style="padding:5px 4px;width:19%;border:1px solid #0d4a1e">Descri&ccedil;&atilde;o</th>
+            <th style="padding:5px 4px;text-align:center;width:4%;border:1px solid #0d4a1e">Qtde</th>
+            <th style="padding:5px 4px;text-align:center;width:4%;border:1px solid #0d4a1e">UM</th>
+            <th style="padding:5px 4px;width:7%;border:1px solid #0d4a1e">Marca</th>
+            <th style="padding:5px 4px;width:7%;border:1px solid #0d4a1e">Modelo</th>
+            <th style="padding:5px 4px;width:10%;border:1px solid #0d4a1e">N&ordm; S&eacute;rie</th>
+            <th style="padding:5px 4px;width:10%;border:1px solid #0d4a1e">C&oacute;digo Patrim&oacute;nio</th>
+            <th style="padding:5px 4px;text-align:center;width:5%;border:1px solid #0d4a1e">N&ordm; Inv.</th>
+            <th style="padding:5px 4px;text-align:center;width:7%;border:1px solid #0d4a1e">Data Emiss&atilde;o</th>
+            <th style="padding:5px 4px;text-align:center;width:5%;border:1px solid #0d4a1e">Devolu&ccedil;&atilde;o</th>
+            <th style="padding:5px 4px;text-align:right;width:7%;border:1px solid #0d4a1e">Valor USD</th>
+            <th style="padding:5px 4px;width:7%;border:1px solid #0d4a1e">Assinatura</th>
+          </tr>
+        </thead>
+        <tbody>${rows2}</tbody>
+      </table>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:.72rem;padding:3px 8px;background:#f8fdf9;border:1px solid #c8e6d0;border-radius:3px">
+        <span>Total de itens: <strong>${ativos.length}</strong></span>
+        <span style="color:#64748B">LUELE.PAL.MOD.018.00</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-top:44px">
+        <div style="text-align:center">
+          <div style="font-size:.72rem;color:#64748B;margin-bottom:2px">Data de Entrega: ${hoje}</div>
+          <div style="border-top:1.5px solid #333;margin-top:44px;padding-top:6px">
+            <div style="font-weight:700;font-size:.82rem">Assinatura SLA / SMLUELE</div>
+            <div style="font-size:.72rem;color:#64748B">Sector de Patrim&oacute;nio</div>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:.72rem;color:#64748B;margin-bottom:2px">&nbsp;</div>
+          <div style="border-top:1.5px solid #333;margin-top:44px;padding-top:6px">
+            <div style="font-weight:700;font-size:.82rem">${TERMO_COLAB}</div>
+            <div style="font-size:.72rem;color:#64748B">Assinatura do Funcion&aacute;rio</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:18px;padding-top:8px;border-top:1px solid #eee;font-size:.62rem;color:#94a3b8;text-align:center">
+        Documento gerado pelo Sistema LUELE PAT &middot; Sociedade Mineira do Luele LDA. &middot; ${hoje} &middot; LUELE.PAL.MOD.018.00
+      </div>
+    </div>`;
+};
+
 window.printTermo = function() {
   const area = document.getElementById('termo-print-area');
   if (!area) {
