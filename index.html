@@ -552,29 +552,71 @@ tbody td{padding:8px 10px;vertical-align:middle}
     <!-- ═══ TERMOS ═══ -->
     <div class="page" id="page-termos">
       <div class="page-hd">
-        <div><h2>&#128196; Termos de Responsabilidade</h2><p>Gera&#231;&#227;o de termos por colaborador</p></div>
+        <div><h2>&#128196; Termos de Responsabilidade</h2><p>Atribui&#231;&#227;o de bens e gera&#231;&#227;o de termos</p></div>
+        <button class="btn btn-primary btn-sm" onclick="showTermoTab('novo')">&#10133; Novo Termo</button>
       </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">Seleccionar Colaborador</div>
-          <div class="form-group" style="margin-bottom:12px">
-            <label>Colaborador</label>
-            <input type="text" id="termo-search" placeholder="Nome do colaborador..." oninput="searchColaborador()">
+
+      <!-- SUB-TABS -->
+      <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--cream-d)">
+        <button id="ttab-novo" onclick="showTermoTab('novo')" style="padding:8px 20px;border:none;background:none;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--ore);border-bottom:2px solid var(--ore);margin-bottom:-2px">&#10133; Novo Termo</button>
+        <button id="ttab-hist" onclick="showTermoTab('hist')" style="padding:8px 20px;border:none;background:none;cursor:pointer;font-size:.85rem;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px">&#128203; Hist&#243;rico</button>
+      </div>
+
+      <!-- NOVO TERMO -->
+      <div id="ttab-novo-content">
+        <div class="grid-2">
+          <div class="card">
+
+            <div class="card-title">1. Colaborador</div>
+            <input type="text" id="termo-search" placeholder="Pesquisar colaborador pelo nome..." oninput="searchColaborador()" style="width:100%;border:1px solid var(--cream-d);border-radius:7px;padding:8px 11px;font-size:.84rem;background:var(--cream);outline:none;margin-bottom:6px">
+            <div id="termo-colab-list"></div>
+            <div id="termo-colab-sel" style="display:none;padding:10px;background:#f0f7f1;border-radius:7px;border-left:3px solid var(--ore);margin-top:6px">
+              <div style="font-weight:700;font-size:.9rem" id="termo-colab-info"></div>
+              <div style="font-size:.74rem;color:var(--muted);margin-top:2px" id="termo-ativos-count"></div>
+            </div>
+
+            <div style="margin-top:18px">
+              <div class="card-title">2. Ativos a Atribuir</div>
+              <div id="termo-ativos-lista" style="max-height:220px;overflow-y:auto;margin-bottom:10px"></div>
+              <div style="border-top:1px solid var(--cream-d);padding-top:10px">
+                <div style="font-size:.76rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Pesquisar e adicionar ativo</div>
+                <input type="text" id="termo-ativo-search" placeholder="C&#243;digo, descri&#231;&#227;o, marca..." oninput="searchAtivoTermo()" style="width:100%;border:1px solid var(--cream-d);border-radius:7px;padding:7px 10px;font-size:.82rem;background:var(--cream);outline:none;margin-bottom:6px">
+                <div id="termo-ativo-results"></div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-primary" onclick="previewTermo()">&#128065; Pr&#233;-visualizar</button>
+              <button class="btn btn-success" onclick="emitirTermo()">&#10003; Emitir e Atribuir</button>
+              <button class="btn btn-secondary" onclick="printTermo()">&#128438; Imprimir PDF</button>
+            </div>
+            <div id="termo-alert" style="margin-top:8px"></div>
           </div>
-          <div id="termo-colab-list"></div>
-          <div id="termo-colab-sel" style="display:none;margin-top:12px;padding:10px;background:var(--cream);border-radius:7px;border-left:3px solid var(--ore)">
-            <div class="detail-lbl">Colaborador Seleccionado</div>
-            <div id="termo-colab-info" style="font-weight:600"></div>
-            <div id="termo-ativos-count" style="font-size:.78rem;color:var(--muted);margin-top:2px"></div>
-          </div>
-          <div style="margin-top:14px;display:flex;gap:8px">
-            <button class="btn btn-primary" onclick="previewTermo()">&#128065; Pr&#233;-visualizar</button>
-            <button class="btn btn-secondary" onclick="printTermo()">&#128438; Imprimir / PDF</button>
+
+          <div class="card" style="min-height:420px">
+            <div class="card-title">Pr&#233;-visualiza&#231;&#227;o</div>
+            <div id="termo-preview"><div class="empty"><div class="empty-icon">&#128196;</div><p>Selecciona um colaborador, adiciona os ativos e clica em Pr&#233;-visualizar.</p></div></div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-title">Pr&#233;-visualiza&#231;&#227;o do Termo</div>
-          <div id="termo-preview"><div class="empty"><div class="empty-icon">&#128196;</div><p>Selecciona um colaborador para gerar o termo.</p></div></div>
+      </div>
+
+      <!-- HISTORICO -->
+      <div id="ttab-hist-content" style="display:none">
+        <div class="table-wrap">
+          <div class="table-head-bar"><span>Termos Emitidos</span></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr>
+                <th>N&#186; Termo</th>
+                <th>Colaborador</th>
+                <th>Data Emiss&#227;o</th>
+                <th>N&#186; Ativos</th>
+                <th>Emitido por</th>
+                <th>A&#231;&#245;es</th>
+              </tr></thead>
+              <tbody id="tbody-termos"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -834,14 +876,19 @@ function estadoBadge(e) {
 
 function fmtDate(d) {
   if (!d) return '—';
-  const s = String(d);
+  const s = String(d).trim();
   if (/^\d{5}$/.test(s)) {
     const b = new Date(1899,11,30);
     b.setDate(b.getDate() + parseInt(s));
     return b.toLocaleDateString('pt-PT');
   }
   if (s.includes('T')) return new Date(s).toLocaleDateString('pt-PT');
-  return s.substring(0,10);
+  if (/^\d{2}[-\/]\d{2}[-\/]\d{4}/.test(s)) {
+    const p = s.split(/[-\/]/);
+    return p[0]+'/'+p[1]+'/'+p[2];
+  }
+  if (/^\d{4}$/.test(s)) return s;
+  return s.substring(0,10) || s;
 }
 
 function fmtCost(v, m) {
@@ -1276,11 +1323,12 @@ async function loadTransferencias() {
 window.searchColaborador = function() {
   const q = document.getElementById('termo-search').value.toLowerCase();
   if (!q || q.length < 2) { document.getElementById('termo-colab-list').innerHTML=''; return; }
-  const colabs = [...new Set(ALL_ATIVOS.map(a=>a.colaborador).filter(Boolean))];
-  const res = colabs.filter(c=>c.toLowerCase().includes(q)).slice(0,6);
+  const colabs = [...new Set(ALL_ATIVOS.map(a=>a.colaborador).filter(Boolean))].sort();
+  const res = colabs.filter(c=>c.toLowerCase().includes(q)).slice(0,8);
   document.getElementById('termo-colab-list').innerHTML = res.map((c,i)=>{
     const safe = c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
-    return `<div onclick="selectColabTermoIdx(${i})" data-name="${safe}" style="padding:7px 10px;border:1px solid var(--cream-d);border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.83rem">${safe}</div>`;
+    const count = ALL_ATIVOS.filter(a=>a.colaborador===c).length;
+    return `<div onclick="selectColabTermoIdx(${i})" style="padding:8px 12px;border:1px solid var(--cream-d);border-radius:7px;margin-bottom:4px;cursor:pointer;font-size:.83rem;display:flex;justify-content:space-between;align-items:center;transition:background .15s" onmouseover="this.style.background='#f0f7f1'" onmouseout="this.style.background=''"><span>${safe}</span><span style="font-size:.72rem;background:var(--ore);color:#fff;padding:1px 7px;border-radius:10px;font-weight:600">${count}</span></div>`;
   }).join('');
   window._termoResults = res;
 };
@@ -1302,49 +1350,207 @@ function selectColabTermoFn(nome) {
   document.getElementById('termo-ativos-count').textContent = ativos.length + ' ativo(s) sob responsabilidade';
 };
 
-window.previewTermo = function() {
-  if (!TERMO_COLAB) return;
-  const ativos = ALL_ATIVOS.filter(a=>a.colaborador===TERMO_COLAB);
-  const hoje = new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'});
-  let rows = ativos.map((a,i)=>`<tr><td>${i+1}</td><td>${a.codigo||'—'}</td><td>${a.descricao||'—'}</td><td>${a.marca||'—'} ${a.modelo||''}</td><td>${a.localizacao||'—'}</td><td>${normEstado(a.estado)}</td></tr>`).join('');
-  document.getElementById('termo-preview').innerHTML = `
-    <div class="termo-preview" id="termo-print-area">
-      <div class="termo-header">
-        <h2>SOCIEDADE MINEIRA DO LUELE</h2>
-        <p>Direc&ccedil;&atilde;o de Aprovisionamento e Log&iacute;stica &middot; Sector de Patrim&oacute;nio</p>
-        <h2 style="margin-top:12px">TERMO DE RESPONSABILIDADE DE BENS PATRIMONIAIS</h2>
+window.showTermoTab = function(tab) {
+  document.getElementById('ttab-novo-content').style.display = tab==='novo'?'block':'none';
+  document.getElementById('ttab-hist-content').style.display = tab==='hist'?'block':'none';
+  document.getElementById('ttab-novo').style.color = tab==='novo'?'var(--ore)':'var(--muted)';
+  document.getElementById('ttab-novo').style.borderBottomColor = tab==='novo'?'var(--ore)':'transparent';
+  document.getElementById('ttab-hist').style.color = tab==='hist'?'var(--ore)':'var(--muted)';
+  document.getElementById('ttab-hist').style.borderBottomColor = tab==='hist'?'var(--ore)':'transparent';
+  if (tab==='hist') loadTermosHist();
+};
+
+window.renderTermoAtivosList = function() {
+  const lista = window._TERMO_ATIVOS || [];
+  const el = document.getElementById('termo-ativos-lista');
+  if (!el) return;
+  if (!lista.length) {
+    el.innerHTML = '<div style="text-align:center;padding:14px;color:var(--muted);font-size:.8rem;background:var(--cream);border-radius:6px">Nenhum ativo adicionado. Pesquisa em baixo.</div>';
+    return;
+  }
+  el.innerHTML = lista.map((a,i) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--cream-d);border-radius:7px;margin-bottom:4px;font-size:.8rem;background:#fff">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(a.descricao||'').replace(/"/g,'&quot;')}">${a.descricao||'—'}</div>
+        <div style="color:var(--muted);font-size:.71rem">${a.codigo||'—'} ${a.marca?'&nbsp;·&nbsp;'+a.marca:''} ${a.localizacao?'&nbsp;·&nbsp;'+a.localizacao:''}</div>
       </div>
-      <p>Eu, <strong>${TERMO_COLAB}</strong>, declaro ter recebido os seguintes bens patrimoniais da Sociedade Mineira do Luele, comprometendo-me a zelar pela sua conserva&ccedil;&atilde;o e a devolv&ecirc;-los nas mesmas condi&ccedil;&otilde;es quando solicitado.</p>
-      <table class="termo-table">
-        <thead><tr><th>#</th><th>C&oacute;digo</th><th>Descri&ccedil;&atilde;o</th><th>Marca / Modelo</th><th>Localiza&ccedil;&atilde;o</th><th>Estado</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <p style="font-size:.8rem;color:var(--muted)">Total de itens: <strong>${ativos.length}</strong></p>
-      <div class="termo-sigs">
-        <div class="sig-block">${TERMO_COLAB}<br>Colaborador Respons&aacute;vel</div>
-        <div class="sig-block">Sector de Patrim&oacute;nio<br>Data: ${hoje}</div>
+      <button onclick="removeAtivoTermo(${i})" title="Remover" style="background:none;border:1px solid #fca5a5;border-radius:5px;color:var(--red);cursor:pointer;padding:2px 7px;font-size:.75rem;flex-shrink:0">&#10005;</button>
+    </div>`).join('');
+  const countEl = document.getElementById('termo-ativos-count');
+  if(countEl) countEl.textContent = lista.length + ' ativo(s) no termo';
+};
+
+window.removeAtivoTermo = function(idx) {
+  if (!window._TERMO_ATIVOS) return;
+  window._TERMO_ATIVOS.splice(idx, 1);
+  renderTermoAtivosList();
+};
+
+window.searchAtivoTermo = function() {
+  const q = (document.getElementById('termo-ativo-search').value||'').toLowerCase().trim();
+  if (!q || q.length < 2) { document.getElementById('termo-ativo-results').innerHTML=''; return; }
+  const existing = new Set((window._TERMO_ATIVOS||[]).map(a=>a.id));
+  const res = ALL_ATIVOS.filter(a=>[a.descricao,a.codigo,a.equipamentoCod,a.marca,a.localizacao].join(' ').toLowerCase().includes(q)).slice(0,6);
+  if(!res.length){ document.getElementById('termo-ativo-results').innerHTML='<div style="padding:8px;color:var(--muted);font-size:.8rem">Sem resultados.</div>'; return; }
+  document.getElementById('termo-ativo-results').innerHTML = res.map(a => {
+    const already = existing.has(a.id);
+    const desc = (a.descricao||'').replace(/"/g,'&quot;');
+    return `<div onclick="${already?'':(`addAtivoTermo('${a.id}')`)}" style="padding:8px 10px;border:1px solid var(--cream-d);border-radius:7px;margin-bottom:3px;cursor:${already?'default':'pointer'};font-size:.8rem;display:flex;justify-content:space-between;align-items:center;background:${already?'var(--cream)':'#fff'}" onmouseover="if(!${already})this.style.background='#f0f7f1'" onmouseout="if(!${already})this.style.background='#fff'">
+      <div style="min-width:0;flex:1">
+        <div style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${desc}">${desc}</div>
+        <div style="font-size:.71rem;color:var(--muted)">${a.codigo||''} ${a.marca?'· '+a.marca:''} ${a.colaborador?'· <b>'+a.colaborador+'</b>':''}</div>
       </div>
+      <span style="font-size:.72rem;color:${already?'var(--muted)':'var(--ore)'};font-weight:700;flex-shrink:0;margin-left:8px">${already?'✓ Já no termo':'+ Adicionar'}</span>
     </div>`;
+  }).join('');
+};
+
+window.addAtivoTermo = function(id) {
+  const a = ALL_ATIVOS.find(x=>x.id===id);
+  if (!a) return;
+  if (!window._TERMO_ATIVOS) window._TERMO_ATIVOS = [];
+  if (window._TERMO_ATIVOS.find(x=>x.id===id)) return;
+  window._TERMO_ATIVOS.push({...a});
+  document.getElementById('termo-ativo-search').value='';
+  document.getElementById('termo-ativo-results').innerHTML='';
+  renderTermoAtivosList();
+};
+
+window.emitirTermo = async function() {
+  if (!TERMO_COLAB) { showAlert('termo-alert','Selecciona primeiro um colaborador.','error'); return; }
+  const ativos = window._TERMO_ATIVOS || [];
+  if (!ativos.length) { showAlert('termo-alert','Adiciona pelo menos um ativo ao termo.','error'); return; }
+  if (!confirm('Confirmas a emissão do termo?\n\nIsso irá:\n- Atribuir '+ativos.length+' ativo(s) a '+TERMO_COLAB+'\n- Actualizar o colaborador responsável no sistema\n- Registar o termo no histórico')) return;
+  try {
+    const hoje = new Date().toISOString().substring(0,10);
+    const nTermo = 'TR-' + Date.now().toString().slice(-6);
+    // Save termo to Firestore
+    await addDoc(collection(db,'termos'),{
+      numero: nTermo,
+      colaborador: TERMO_COLAB,
+      ativos: ativos.map(a=>({id:a.id,codigo:a.codigo,descricao:a.descricao,marca:a.marca})),
+      totalAtivos: ativos.length,
+      dataEmissao: hoje,
+      emitidoPor: auth.currentUser?.email||'sistema',
+      criadoEm: serverTimestamp(),
+    });
+    // Update each ativo with new colaborador
+    for (const a of ativos) {
+      await updateDoc(doc(db,'ativos',a.id),{
+        colaborador: TERMO_COLAB,
+        atualizadoEm: serverTimestamp(),
+      });
+      const idx = ALL_ATIVOS.findIndex(x=>x.id===a.id);
+      if(idx>=0) ALL_ATIVOS[idx].colaborador = TERMO_COLAB;
+    }
+    showAlert('termo-alert','Termo '+nTermo+' emitido! '+ativos.length+' ativo(s) atribuído(s) a '+TERMO_COLAB+'.','success');
+    previewTermo();
+    // Reset form
+    TERMO_COLAB = null;
+    window._TERMO_ATIVOS = [];
+    document.getElementById('termo-search').value='';
+    document.getElementById('termo-colab-sel').style.display='none';
+    renderTermoAtivosList();
+  } catch(e) {
+    showAlert('termo-alert','Erro: '+e.message,'error');
+  }
+};
+
+async function loadTermosHist() {
+  const el = document.getElementById('tbody-termos');
+  if (!el) return;
+  el.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px"><div class="spinner" style="margin:0 auto"></div></td></tr>';
+  try {
+    const q2 = query(collection(db,'termos'), orderBy('criadoEm','desc'), limit(30));
+    const snap = await getDocs(q2);
+    if(snap.empty){ el.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Nenhum termo emitido ainda.</td></tr>'; return; }
+    el.innerHTML = snap.docs.map(d=>{
+      const t = d.data();
+      return `<tr>
+        <td class="td-mono" style="font-weight:700;color:var(--ore)">${t.numero||'—'}</td>
+        <td style="font-weight:500">${t.colaborador||'—'}</td>
+        <td class="td-mono">${t.dataEmissao||'—'}</td>
+        <td style="text-align:center"><span style="background:var(--cream-d);padding:2px 8px;border-radius:10px;font-size:.78rem;font-weight:600">${t.totalAtivos||0}</span></td>
+        <td style="color:var(--muted);font-size:.8rem">${t.emitidoPor||'—'}</td>
+        <td><button class="btn btn-ghost btn-sm" onclick="reimprimir('${d.id}')">&#128438; Reimprimir</button></td>
+      </tr>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--red)">Erro: '+e.message+'</td></tr>';
+  }
+}
+
+window.reimprimir = async function(id) {
+  try {
+    const snap2 = await getDoc(doc(db,'termos',id));
+    if(!snap2.exists()) return;
+    const t = snap2.data();
+    TERMO_COLAB = t.colaborador;
+    window._TERMO_ATIVOS = (t.ativos||[]).map(a=>({...a}));
+    showTermoTab('novo');
+    previewTermo();
+    setTimeout(()=>window.print(),400);
+  } catch(e) { alert('Erro: '+e.message); }
 };
 
 window.printTermo = function() {
   const area = document.getElementById('termo-print-area');
-  if (!area) { previewTermo(); }
+  if (!area) {
+    previewTermo();
+    setTimeout(()=>window.print(), 500);
+    return;
+  }
   window.print();
 };
 
 // ── DEPRECIACOES ───────────────────────────────────────────────────────────
 window.calcDepreciacoes = async function() {
   const el = document.getElementById('tbody-dep');
-  const depAtivos = ALL_ATIVOS.filter(a=>(a.custoAOA||a.custoUSD||a.custoEUR)&&a.dataIncorporacao);
+  const depAtivos = ALL_ATIVOS.filter(a=>{
+    const hasCusto = a.custoAOA||a.custoUSD||a.custoEUR;
+    const hasDate = a.dataIncorporacao && String(a.dataIncorporacao).trim().length >= 4;
+    const notBadCode = !['XXX','xxx','—','-',''].includes(String(a.codigo||'').trim());
+    return hasCusto && hasDate;
+  });
   if(!depAtivos.length){ el.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">Sem ativos com dados de deprecia&ccedil;&atilde;o completos.</td></tr>'; return; }
   const now = new Date();
   let totalCusto=0, totalDepr=0, totalVC=0;
   const rows = depAtivos.map(a=>{
     const custo = a.custoAOA||a.custoUSD||a.custoEUR||0;
     const moeda = a.moeda||'AOA';
-    const dtStr = String(a.dataIncorporacao||'');
-    const dt = dtStr.includes('T') ? new Date(dtStr) : dtStr.length>=10 ? new Date(dtStr.substring(0,10)) : null;
+    const dtStr = String(a.dataIncorporacao||'').trim();
+    // Robust date parsing - handle all formats from inventory
+    let dt = null;
+    if (dtStr) {
+      // Full ISO date: 2022-09-27 or 2022-09-27T...
+      if (/^\d{4}-\d{2}-\d{2}/.test(dtStr)) {
+        dt = new Date(dtStr.substring(0,10));
+      }
+      // DD-MM-YYYY or DD/MM/YYYY
+      else if (/^\d{2}[-\/]\d{2}[-\/]\d{4}/.test(dtStr)) {
+        const p = dtStr.split(/[-\/]/);
+        dt = new Date(parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
+      }
+      // Year only: 2022, 2023 etc - assume 1st January
+      else if (/^\d{4}$/.test(dtStr)) {
+        const yr = parseInt(dtStr);
+        if (yr >= 2000 && yr <= 2030) dt = new Date(yr, 0, 1);
+      }
+      // Serial date (Excel): 44000 etc
+      else if (/^\d{5}$/.test(dtStr)) {
+        const base = new Date(1899,11,30);
+        base.setDate(base.getDate() + parseInt(dtStr));
+        dt = base;
+      }
+      // Month name like FEVEREIRO - use current year, that month
+      else if (/^[A-ZÀ-Ú]{3,}/i.test(dtStr)) {
+        const months = {'jan':0,'fev':1,'mar':2,'abr':3,'mai':4,'jun':5,'jul':6,'ago':7,'set':8,'out':9,'nov':10,'dez':11,'feb':1,'may':4,'aug':7,'sep':8,'oct':9};
+        const key = dtStr.toLowerCase().substring(0,3);
+        if (months[key] !== undefined) dt = new Date(2023, months[key], 1);
+      }
+    }
+    // Validate: reject future dates beyond 2026 and ancient dates before 1990
+    if (dt && (dt.getFullYear() > 2026 || dt.getFullYear() < 1990)) dt = null;
     const anos = dt ? Math.max(0,(now-dt)/(1000*60*60*24*365.25)) : 0;
     // Vida util por classe
     const vuMap={'Trator Esteira':15,'Escavadeira Hidráulica':12,'Pá Carregadeira':12,'Motoniveladora':12,'Rolo Compactador':10,'Caminhão Articulado':10,'Caminhão Rigido':10,'Torre de Iluminação':8,'Gerador':10,'Motor Estacionário':8,'Empilhadeira':8,'Veiculo Utilitario':8,'Bem Informático/Administrativo':5};
