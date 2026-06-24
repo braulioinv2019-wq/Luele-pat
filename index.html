@@ -636,8 +636,10 @@ tbody td{padding:8px 10px;vertical-align:middle}
             <thead><tr>
               <th>C&#243;digo</th>
               <th>Descri&#231;&#227;o</th>
+              <th>Classe</th>
               <th>Data Incorp.</th>
               <th>Vida &#218;til</th>
+              <th>Taxa (%)</th>
               <th>Custo Original</th>
               <th>Anos Decorridos</th>
               <th>Depr. Acumulada</th>
@@ -1674,20 +1676,57 @@ window.calcDepreciacoes = async function() {
     if (dt && (dt.getFullYear() > 2026 || dt.getFullYear() < 1990)) dt = null;
     const anos = dt ? Math.max(0,(now-dt)/(1000*60*60*24*365.25)) : 0;
     // Vida util por classe
-    const vuMap={'Trator Esteira':15,'Escavadeira Hidráulica':12,'Pá Carregadeira':12,'Motoniveladora':12,'Rolo Compactador':10,'Caminhão Articulado':10,'Caminhão Rigido':10,'Torre de Iluminação':8,'Gerador':10,'Motor Estacionário':8,'Empilhadeira':8,'Veiculo Utilitario':8,'Bem Informático/Administrativo':5};
-    const vu = a.vidaUtil || vuMap[a.classe] || (a.tipo==='Equipamento Pesado'?10:5);
-    const deprAcum = Math.min(custo, custo/vu*anos);
-    const vc = Math.max(0, custo-deprAcum);
+    // Tabela oficial de vida útil - Decreto Presidencial n.º 207/15
+    const vuMap={
+      'Trator Esteira':5,'TRATOR AGRICOLA':5,'Trator de Pneu':5,
+      'Escavadeira Hidráulica':8,'Pá Carregadeira':8,
+      'Motoniveladora':5,'Rolo Compactador':5,
+      'Caminhão Articulado':7,'Caminhão Rigido':7,
+      'Caminhão Cisterna':6,'Caminhão Munck':6,
+      'Caminhão Transp. Pessoal':5,'Cavalo Mecânico':6,
+      'Porta Máquina':7,'Veiculo Utilitario':5,'Carrinha':5,
+      'Empilhadeira':7,'Grua':8,'Guindaste':8,
+      'Torre de Iluminação':8,'Gerador':4,'Motor Estacionário':4,
+      'Motobomba':8,'Maquina Solda':5,'Multifunção':4,
+      'Bem Informático/Administrativo':3,
+      'Computador':3,'Monitor':4,'Impressora':3,
+      'Televisor':4,'Rádio':3,'Ar Condicionado':8,
+      'Contentor':12,'Equipamento Pesado':8
+    };
+    const taxaMap={
+      'Trator Esteira':20,'TRATOR AGRICOLA':20,'Trator de Pneu':20,
+      'Escavadeira Hidráulica':12.5,'Pá Carregadeira':12.5,
+      'Motoniveladora':20,'Rolo Compactador':20,
+      'Caminhão Articulado':14.28,'Caminhão Rigido':14.28,
+      'Caminhão Cisterna':16.67,'Caminhão Munck':16.67,
+      'Caminhão Transp. Pessoal':20,'Cavalo Mecânico':16.67,
+      'Porta Máquina':14.28,'Veiculo Utilitario':20,'Carrinha':20,
+      'Empilhadeira':14.28,'Grua':12.5,'Guindaste':12.5,
+      'Torre de Iluminação':12.5,'Gerador':25,'Motor Estacionário':25,
+      'Motobomba':12.5,'Maquina Solda':20,'Multifunção':25,
+      'Bem Informático/Administrativo':33.33,
+      'Computador':33.33,'Monitor':25,'Impressora':33.33,
+      'Televisor':25,'Rádio':33.33,'Ar Condicionado':12.5,
+      'Contentor':8.33,'Equipamento Pesado':12.5
+    };
+    const vu = a.vidaUtil || vuMap[a.classe] || (a.tipo==='Equipamento Pesado'?8:3);
+    const taxaAnual = taxaMap[a.classe] || (a.tipo==='Equipamento Pesado'?12.5:33.33);
+    // Método das quotas constantes (Decreto 207/15, Art. 6º, n.º 2)
+    const taxaDecimal = taxaAnual / 100;
+    const deprAcum = Math.min(custo, custo * taxaDecimal * anos);
+    const vc = Math.max(0, custo - deprAcum);
     totalCusto+=custo; totalDepr+=deprAcum; totalVC+=vc;
     return `<tr>
       <td class="td-mono">${a.codigo||'—'}</td>
       <td class="td-desc" title="${a.descricao||''}">${a.descricao||'—'}</td>
+      <td style="font-size:.75rem;color:var(--muted)">${a.classe||a.tipo||'—'}</td>
       <td class="td-mono">${fmtDate(a.dataIncorporacao)}</td>
       <td style="text-align:center">${vu} anos</td>
+      <td style="text-align:center;font-weight:600;color:var(--ore)">${taxaAnual}%</td>
       <td style="text-align:right;font-family:monospace;font-size:.78rem">${moeda} ${Math.round(custo).toLocaleString('pt-PT')}</td>
       <td style="text-align:center">${anos.toFixed(1)} anos</td>
       <td style="text-align:right;font-family:monospace;font-size:.78rem;color:var(--red)">${moeda} ${Math.round(deprAcum).toLocaleString('pt-PT')}</td>
-      <td style="text-align:right;font-family:monospace;font-size:.78rem;color:var(--green)">${moeda} ${Math.round(vc).toLocaleString('pt-PT')}</td>
+      <td style="text-align:right;font-family:monospace;font-size:.78rem;color:var(--green);font-weight:600">${moeda} ${Math.round(vc).toLocaleString('pt-PT')}</td>
       <td>${estadoBadge(a.estado)}</td>
     </tr>`;
   });
